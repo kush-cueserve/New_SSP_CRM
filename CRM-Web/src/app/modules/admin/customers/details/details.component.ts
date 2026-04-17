@@ -30,7 +30,7 @@ import { JobDialogComponent } from './job-dialog/job-dialog.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { JobDetailsComponent } from './job-details/job-details.component';
+import { JobPreviewDialogComponent } from '../../jobs/job-preview-dialog/job-preview-dialog.component';
 import { DynamicFieldsComponent } from './dynamic-fields/dynamic-fields.component';
 import { NotesComponent } from './notes/notes.component';
 import { RelationshipsComponent } from './relationships/relationships.component';
@@ -62,7 +62,6 @@ import { SummaryComponent } from './summary/summary.component';
         MatProgressBarModule,
         MatSidenavModule,
         RouterLink,
-        JobDetailsComponent,
         DynamicFieldsComponent,
         NotesComponent,
         RelationshipsComponent,
@@ -105,6 +104,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
     staff: any[] = [];
     jobTypes: any[] = [];
     jobStatusMasters: any[] = [];
+    jobTypeStatusMappings: any[] = [];
     
     // Jobs data
     jobs: Job[] = [];
@@ -296,6 +296,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
                 this.staff = lookups.staff;
                 this.jobTypes = lookups.jobTypes;
                 this.jobStatusMasters = lookups.jobStatusMasters;
+                this.jobTypeStatusMappings = lookups.jobTypeStatusMappings;
             });
     }
 
@@ -350,10 +351,29 @@ export class DetailsComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Open job details drawer
+     * Open job details dialog
      */
     openJobDetails(jobId: number): void {
-        this.selectedJobId = jobId;
+        const dialogRef = this._matDialog.open(JobPreviewDialogComponent, {
+            data: {
+                jobId: jobId,
+                statusMasters: this.jobStatusMasters,
+                jobTypeStatusMappings: this.jobTypeStatusMappings,
+                staff: this.staff,
+                isAdmin: this.isAdmin
+            },
+            width: '1400px',
+            maxWidth: '96vw',
+            height: '92vh',
+            maxHeight: '92vh',
+            panelClass: 'job-preview-dialog-panel'
+        });
+
+        dialogRef.afterClosed().subscribe(() => {
+            if (this.customerId) {
+                this.loadJobs(this.customerId);
+            }
+        });
     }
 
     /**

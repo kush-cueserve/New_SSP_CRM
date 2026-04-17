@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, SimpleChanges, inject } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -12,11 +12,14 @@ import { Job } from '../../../jobs/job.types';
     selector: 'customer-summary',
     standalone: true,
     imports: [CommonModule, MatIconModule, MatButtonModule, MatDividerModule],
-    templateUrl: './summary.component.html'
+    templateUrl: './summary.component.html',
+    encapsulation: ViewEncapsulation.None
 })
-export class SummaryComponent implements OnChanges {
+export class SummaryComponent implements OnInit, OnChanges {
     @Input() customer: any;
     @Input() customerId: number;
+    @Input() lastVarifiedDate: string;
+    @Input() lastVarifiedUserName: string;
 
     private _customerService = inject(CustomerService);
     private _jobService = inject(JobService);
@@ -25,11 +28,22 @@ export class SummaryComponent implements OnChanges {
     jobs: Job[] = [];
     totalFees: number = 0;
     activeJobsCount: number = 0;
+    currentYear: number = new Date().getFullYear();
 
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes['customerId'] && this.customerId) {
+    ngOnInit(): void {
+        if (this.customerId) {
             this.loadSummaryData();
         }
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['customerId'] && this.customerId && !changes['customerId'].firstChange) {
+            this.loadSummaryData();
+        }
+    }
+
+    printSummary(): void {
+        window.print();
     }
 
     loadSummaryData(): void {

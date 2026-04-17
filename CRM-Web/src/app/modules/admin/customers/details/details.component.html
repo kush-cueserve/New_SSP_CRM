@@ -1,6 +1,6 @@
 <div class="flex flex-col flex-auto min-w-0">
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row items-center justify-between px-6 py-8 border-b bg-card dark:bg-transparent">
+    <div class="flex flex-col sm:flex-row items-center justify-between px-6 py-8 border-b bg-card dark:bg-transparent print:hidden">
         <div class="flex flex-col">
             <!-- Breadcrumbs -->
             <div class="flex items-center text-sm font-medium text-secondary whitespace-nowrap">
@@ -42,7 +42,7 @@
             <form [formGroup]="customerForm">
                 
                 <!-- TOP LEVEL CONTROLS -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8 bg-primary/5 dark:bg-primary-500/10 p-6 rounded-2xl border border-primary/10">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8 bg-primary/5 dark:bg-primary-500/10 p-6 rounded-2xl border border-primary/10 print:hidden">
                     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full">
                         <mat-label>Contact Type</mat-label>
                         <mat-select formControlName="contactType">
@@ -75,7 +75,12 @@
                                     <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_outline:presentation-chart-bar'"></mat-icon>
                                     Summary
                                 </ng-template>
-                                <customer-summary [customerId]="customerId" [customer]="customerForm.value"></customer-summary>
+                                <customer-summary 
+                                    [customerId]="customerId" 
+                                    [customer]="customerForm.value"
+                                    [lastVarifiedDate]="lastVarifiedDate"
+                                    [lastVarifiedUserName]="lastVarifiedUserName">
+                                </customer-summary>
                             </mat-tab>
 
                             <!-- COMMON DETAIL TAB -->
@@ -542,28 +547,14 @@
                                 </div>
                             </mat-tab>
                             
-                            <!-- JOBS TAB -->
-                            <mat-tab>
-                                <ng-template mat-tab-label>
-                                    <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_outline:briefcase'"></mat-icon>
-                                    Jobs
-                                </ng-template>
-
-                                <mat-drawer-container class="h-full min-h-[500px] bg-transparent" [hasBackdrop]="true">
-                                    
-                                    <!-- Job Details Drawer -->
-                                    <mat-drawer
-                                        class="w-full md:w-160 dark:bg-gray-900"
-                                        [mode]="'over'"
-                                        [opened]="selectedJobId !== null"
-                                        [position]="'right'"
-                                        (closedStart)="closeJobDetails()">
-                                        <job-details *ngIf="selectedJobId" [jobId]="selectedJobId" [statusMasters]="jobStatusMasters" (jobUpdated)="loadJobs(customerId)" (closed)="closeJobDetails()"></job-details>
-                                    </mat-drawer>
-
-                                    <!-- Drawer Content (The Jobs List) -->
-                                    <mat-drawer-content>
-                                        <div class="p-6 md:p-10 bg-primary/5 dark:bg-primary-500/5 min-h-[500px]">
+                             <!-- JOBS TAB -->
+                             <mat-tab>
+                                 <ng-template mat-tab-label>
+                                     <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_outline:briefcase'"></mat-icon>
+                                     Jobs
+                                 </ng-template>
+ 
+                                <div class="p-6 md:p-10 bg-primary/5 dark:bg-primary-500/5 min-h-[500px]">
                                             
                                             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 gap-4">
                                                 <div class="flex flex-col">
@@ -724,9 +715,7 @@
                                             }
 
                                         </div>
-                                    </mat-drawer-content>
-                                </mat-drawer-container>
-                            </mat-tab>
+                             </mat-tab>
                             
                             <mat-tab label="Dynamic Details">
                                 <dynamic-fields [customerId]="customerId"></dynamic-fields>

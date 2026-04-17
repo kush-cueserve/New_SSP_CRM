@@ -14,6 +14,7 @@ export interface LookupData {
     staff: any[];
     jobTypes: any[];
     jobStatusMasters: any[];
+    jobTypeStatusMappings: any[];
 }
 
 @Injectable({

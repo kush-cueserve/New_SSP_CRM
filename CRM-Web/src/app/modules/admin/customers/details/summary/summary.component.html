@@ -1,151 +1,292 @@
-<div class="flex flex-col flex-auto p-6 md:p-8 space-y-8">
+<div class="flex flex-col flex-auto p-6 md:p-8 space-y-8 bg-gray-50/50 dark:bg-transparent min-h-screen print:bg-white print:p-0">
     
-    <!-- KPI Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        
-        <!-- Status Card -->
-        <div class="flex flex-col p-6 bg-card shadow rounded-2xl border-b-4 border-emerald-500">
-            <div class="flex items-center justify-between mb-4">
-                <span class="text-xs font-bold text-secondary uppercase tracking-widest">Account Status</span>
-                <mat-icon class="icon-size-5 text-emerald-500" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
-            </div>
-            <div class="text-3xl font-extrabold text-gray-900 dark:text-gray-100">{{ customer?.isActive ? 'ACTIVE' : 'INACTIVE' }}</div>
-            <div class="mt-1 text-xs text-secondary font-medium">Current operational state</div>
+    <!-- Action Bar (Hidden on Print) -->
+    <div class="flex items-center justify-between print:hidden">
+        <div class="flex flex-col">
+            <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-none">Customer Summary</h2>
+            <div class="mt-1 text-secondary font-medium">Account overview and service portfolio dashboard</div>
         </div>
-
-        <!-- Verification Card -->
-        <div class="flex flex-col p-6 bg-card shadow rounded-2xl border-b-4" 
-             [ngClass]="customer?.lastVarifiedDate ? 'border-blue-500' : 'border-amber-500'">
-            <div class="flex items-center justify-between mb-4">
-                <span class="text-xs font-bold text-secondary uppercase tracking-widest">Verification</span>
-                <mat-icon class="icon-size-5" 
-                          [ngClass]="customer?.lastVarifiedDate ? 'text-blue-500' : 'text-amber-500'"
-                          [svgIcon]="customer?.lastVarifiedDate ? 'heroicons_solid:shield-check' : 'heroicons_solid:shield-exclamation'"></mat-icon>
-            </div>
-            <div class="text-3xl font-extrabold text-gray-900 dark:text-gray-100">{{ customer?.lastVarifiedDate ? 'VERIFIED' : 'PENDING' }}</div>
-            <div class="mt-1 text-xs text-secondary font-medium">
-                {{ customer?.lastVarifiedDate ? 'Validated on ' + (customer?.lastVarifiedDate | date:'MMM dd, yyyy') : 'Awaiting identification check' }}
-            </div>
-        </div>
-
-        <!-- Annual Value Card -->
-        <div class="flex flex-col p-6 bg-card shadow rounded-2xl border-b-4 border-indigo-500">
-            <div class="flex items-center justify-between mb-4">
-                <span class="text-xs font-bold text-secondary uppercase tracking-widest">Est. Annual Value</span>
-                <mat-icon class="icon-size-5 text-indigo-500" [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
-            </div>
-            <div class="text-3xl font-extrabold text-gray-900 dark:text-gray-100">{{ totalFees | currency }}</div>
-            <div class="mt-1 text-xs text-secondary font-medium">Based on service portfolio</div>
-        </div>
-
-        <!-- Active Jobs Card -->
-        <div class="flex flex-col p-6 bg-card shadow rounded-2xl border-b-4 border-purple-500">
-            <div class="flex items-center justify-between mb-4">
-                <span class="text-xs font-bold text-secondary uppercase tracking-widest">Active Jobs</span>
-                <mat-icon class="icon-size-5 text-purple-500" [svgIcon]="'heroicons_solid:briefcase'"></mat-icon>
-            </div>
-            <div class="text-3xl font-extrabold text-gray-900 dark:text-gray-100">{{ activeJobsCount }}</div>
-            <div class="mt-1 text-xs text-secondary font-medium">In-progress deliverables</div>
-        </div>
+        <button mat-flat-button color="primary" class="rounded-xl" (click)="printSummary()">
+            <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_outline:printer'"></mat-icon>
+            Print Report
+        </button>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- MAIN REPORT CONTAINER -->
+    <div id="print-area" class="space-y-8">
         
-        <!-- Left Column: Quick Profile -->
-        <div class="lg:col-span-2 space-y-8">
+        <!-- Section 1: Client Identity -->
+        <div class="bg-card shadow rounded-2xl p-8 border border-divider overflow-hidden">
+            <div class="flex items-center justify-between border-b border-divider pb-4 mb-8">
+                <div class="flex flex-col">
+                    <span class="text-xl font-extrabold tracking-tight text-primary uppercase leading-tight">Client Detail</span>
+                    <span class="text-[10px] font-bold text-secondary uppercase tracking-widest">Core Information & Identity</span>
+                </div>
+                <div class="flex flex-col items-end">
+                    <span class="text-[10px] font-bold text-secondary uppercase tracking-widest">Client ID</span>
+                    <span class="text-sm font-mono font-bold">#{{ customer?.id }}</span>
+                </div>
+            </div>
             
-            <!-- Quick Info -->
-            <div class="bg-card shadow rounded-2xl overflow-hidden border">
-                <div class="px-6 py-4 bg-gray-50 dark:bg-transparent border-b flex items-center gap-3">
-                    <mat-icon class="icon-size-5 text-primary" [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
-                    <span class="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-widest">Quick Profile</span>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-12">
+                <div class="flex flex-col">
+                    <span class="text-[10px] font-bold text-secondary uppercase tracking-widest mb-1">Full Legal Name</span>
+                    <span class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ customer?.name }}</span>
                 </div>
-                <div class="p-8 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
-                    <div class="flex flex-col">
-                        <span class="text-[10px] font-bold text-secondary uppercase tracking-widest mb-1">Trading Name</span>
-                        <span class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ customer?.tradingName || 'None' }}</span>
+                <div class="flex flex-col">
+                    <span class="text-[10px] font-bold text-secondary uppercase tracking-widest mb-1">System Code</span>
+                    <span class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ customer?.code }}</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-[10px] font-bold text-secondary uppercase tracking-widest mb-1">Trading Name</span>
+                    <span class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ customer?.tradingName || '-' }}</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-[10px] font-bold text-secondary uppercase tracking-widest mb-1">Registration (ABN)</span>
+                    <span class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ customer?.abnNumber || '-' }}</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-[10px] font-bold text-secondary uppercase tracking-widest mb-1">Tax File Number (TFN)</span>
+                    <span class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ customer?.tfnNumber || '-' }}</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-[10px] font-bold text-secondary uppercase tracking-widest mb-1">Account Status</span>
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full" [ngClass]="customer?.isActive ? 'bg-emerald-500' : 'bg-rose-500'"></div>
+                        <span class="text-sm font-bold uppercase" [ngClass]="customer?.isActive ? 'text-emerald-600' : 'text-rose-600'">
+                            {{ customer?.isActive ? 'Active' : 'Inactive' }}
+                        </span>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- Section 2: Communication -->
+            <div class="bg-card shadow rounded-2xl p-8 border border-divider overflow-hidden">
+                <div class="flex items-center justify-between border-b border-divider pb-4 mb-8">
                     <div class="flex flex-col">
-                        <span class="text-[10px] font-bold text-secondary uppercase tracking-widest mb-1">Registration (ABN/TFN)</span>
-                        <div class="flex items-center gap-2">
-                            <span class="text-sm font-semibold text-gray-900 dark:text-gray-100" *ngIf="customer?.abnNumber">ABN: {{ customer?.abnNumber }}</span>
-                            <span class="text-xs text-hint" *ngIf="customer?.abnNumber && customer?.tfnNumber">|</span>
-                            <span class="text-sm font-semibold text-gray-900 dark:text-gray-100" *ngIf="customer?.tfnNumber">TFN: {{ customer?.tfnNumber }}</span>
-                        </div>
+                        <span class="text-xl font-extrabold tracking-tight text-primary uppercase leading-tight">Communication</span>
+                        <span class="text-[10px] font-bold text-secondary uppercase tracking-widest">Primary Contact Channels</span>
                     </div>
-                    <div class="flex flex-col">
-                        <span class="text-[10px] font-bold text-secondary uppercase tracking-widest mb-1">Primary Contact</span>
-                        <span class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ customer?.contactInfo?.contactName || 'Unassigned' }}</span>
+                </div>
+                <div class="space-y-6">
+                    <div class="flex items-center justify-between border-b border-gray-50 dark:border-gray-800 pb-3">
+                        <span class="text-[10px] font-bold text-secondary uppercase tracking-widest">Contact Name</span>
+                        <span class="text-sm font-semibold">{{ customer?.contactInfo?.contactName || '-' }}</span>
                     </div>
-                    <div class="flex flex-col">
-                        <span class="text-[10px] font-bold text-secondary uppercase tracking-widest mb-1">Mobile / Cell</span>
-                        <span class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ customer?.contactInfo?.cellPhone || 'No Number' }}</span>
+                    <div class="flex items-center justify-between border-b border-gray-50 dark:border-gray-800 pb-3">
+                        <span class="text-[10px] font-bold text-secondary uppercase tracking-widest">Mobile Phone</span>
+                        <span class="text-sm font-semibold">{{ customer?.contactInfo?.cellPhone || '-' }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] font-bold text-secondary uppercase tracking-widest">Email Address</span>
+                        <span class="text-sm font-semibold text-primary underline cursor-pointer">{{ customer?.contactInfo?.email || '-' }}</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Services Summary -->
-            <div class="bg-card shadow rounded-2xl overflow-hidden border">
-                <div class="px-6 py-4 bg-gray-50 dark:bg-transparent border-b flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <mat-icon class="icon-size-5 text-primary" [svgIcon]="'heroicons_outline:clipboard-document-list'"></mat-icon>
-                        <span class="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-widest">Service Breakdown</span>
+            <!-- Section 3: Compliance & Value -->
+            <div class="bg-card shadow rounded-2xl p-8 border border-divider overflow-hidden">
+                <div class="flex items-center justify-between border-b border-divider pb-4 mb-8">
+                    <div class="flex flex-col">
+                        <span class="text-xl font-extrabold tracking-tight text-primary uppercase leading-tight">Compliance & Value</span>
+                        <span class="text-[10px] font-bold text-secondary uppercase tracking-widest">Verification & Annual Estimates</span>
                     </div>
                 </div>
-                <div class="p-0">
-                    <div *ngIf="services.length === 0" class="p-12 text-center text-secondary">
-                        No services assigned to this customer yet.
+                <div class="space-y-6">
+                    <div class="flex items-start gap-4">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary">
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:shield-check'"></mat-icon>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[10px] font-bold text-secondary uppercase tracking-widest">Verification Info</span>
+                            <span class="text-sm font-semibold" *ngIf="customer?.lastVarifiedDate">
+                                Validated on {{ lastVarifiedDate | date:'dd-MM-yyyy HH:mm' }}
+                            </span>
+                            <span class="text-xs text-secondary mt-0.5" *ngIf="customer?.lastVarifiedDate">
+                                Verified by {{ lastVarifiedUserName }}
+                            </span>
+                            <span class="text-amber-600 font-bold text-xs italic" *ngIf="!customer?.lastVarifiedDate">Verification Awaiting Action</span>
+                        </div>
                     </div>
-                    <table *ngIf="services.length > 0" class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-gray-50/50 dark:bg-gray-800/50 text-[10px] font-bold text-secondary uppercase tracking-widest">
-                                <th class="px-6 py-3">Service</th>
-                                <th class="px-6 py-3">Frequency</th>
-                                <th class="px-6 py-3 text-right">Fee</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
-                            <tr *ngFor="let s of services" class="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
-                                <td class="px-6 py-4">
-                                    <span class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ s.serviceName }}</span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200">
-                                        {{ s.unit === 'y' ? 'YEARLY' : s.unit === 'q' ? 'QUARTERLY' : s.unit === 'm' ? 'MONTHLY' : 'PERIODIC' }}
+                    <div class="flex items-start gap-4 border-t border-divider pt-6">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900 dark:text-emerald-100">
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[10px] font-bold text-secondary uppercase tracking-widest">Estimated Annual Revenue</span>
+                            <span class="text-2xl font-extrabold text-emerald-600 leading-none mt-1">{{ totalFees | currency }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Service Portfolio -->
+        <div class="bg-card shadow rounded-2xl border border-divider overflow-hidden">
+            <div class="flex items-center justify-between p-8 border-b border-divider">
+                <div class="flex flex-col">
+                    <span class="text-xl font-extrabold tracking-tight text-primary uppercase leading-tight">Service Portfolio</span>
+                    <span class="text-[10px] font-bold text-secondary uppercase tracking-widest">Detailed billing & service assignments</span>
+                </div>
+            </div>
+            <div class="p-0 overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 dark:bg-gray-800/50 text-[10px] font-bold text-secondary uppercase border-b">
+                            <th class="px-8 py-4 border-r border-divider">Service Type</th>
+                            <th class="px-8 py-4 border-r border-divider">Frequency</th>
+                            <th class="px-8 py-4 border-r border-divider text-right">Fee (Excl. GST)</th>
+                            <th class="px-8 py-4">Internal Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-divider">
+                        <tr *ngFor="let s of services" class="hover:bg-gray-50 transition-colors">
+                            <td class="px-8 py-4 font-bold border-r border-divider text-sm">{{ s.serviceName }}</td>
+                            <td class="px-8 py-4 border-r border-divider">
+                                <span class="text-[10px] font-bold px-2 py-1 rounded bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-100 uppercase tracking-widest">
+                                    {{ s.unit === 'y' ? 'Yearly' : s.unit === 'q' ? 'Quarterly' : s.unit === 'm' ? 'Monthly' : 'Periodic' }}
+                                </span>
+                            </td>
+                            <td class="px-8 py-4 border-r border-divider text-right font-semibold text-sm">{{ s.amount | currency }}</td>
+                            <td class="px-8 py-4 italic text-secondary text-xs">{{ s.internalNotes || '-' }}</td>
+                        </tr>
+                        <tr *ngIf="services.length === 0">
+                            <td colspan="4" class="px-8 py-16 text-center text-secondary italic">No active services defined in portfolio.</td>
+                        </tr>
+                    </tbody>
+                    <tfoot *ngIf="services.length > 0">
+                        <tr class="bg-gray-50/50 dark:bg-gray-800/20 font-bold border-t border-divider">
+                            <td colspan="2" class="px-8 py-5 text-right uppercase text-[10px] tracking-widest text-secondary">Aggregate Annual Estimate</td>
+                            <td class="px-8 py-5 text-right text-lg text-primary">{{ totalFees | currency }}</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section 5: Recent Jobs -->
+        <div class="bg-card shadow rounded-2xl border border-divider overflow-hidden">
+            <div class="flex items-center justify-between p-8 border-b border-divider">
+                <div class="flex flex-col">
+                    <span class="text-xl font-extrabold tracking-tight text-primary uppercase leading-tight">Recent Activity</span>
+                    <span class="text-[10px] font-bold text-secondary uppercase tracking-widest">Latest jobs and lifecycle status</span>
+                </div>
+            </div>
+            <div class="p-0 overflow-x-auto">
+                <table class="w-full text-left border-collapse print:border">
+                    <thead>
+                        <tr class="bg-gray-50 dark:bg-gray-800/50 text-[10px] font-bold text-secondary uppercase border-b">
+                            <th class="px-8 py-4 border-r border-divider">Job Caption</th>
+                            <th class="px-8 py-4 border-r border-divider">Assign Date</th>
+                            <th class="px-8 py-4">Current Workflow Stage</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-divider">
+                        <tr *ngFor="let j of jobs" class="hover:bg-gray-50 transition-colors">
+                            <td class="px-8 py-4 border-r border-divider text-sm font-medium">{{ j.caption }}</td>
+                            <td class="px-8 py-4 border-r border-divider text-sm">{{ j.assignDate | date:'dd-MM-yyyy' }}</td>
+                            <td class="px-8 py-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full print:border" [style.background-color]="j.statusColor || '#94a3b8'" style="-webkit-print-color-adjust: exact;"></div>
+                                    <span class="uppercase font-bold text-[10px] tracking-widest" 
+                                          [style.color]="j.statusColor || '#64748b'" style="-webkit-print-color-adjust: exact;">
+                                        {{ j.statusName }}
                                     </span>
-                                </td>
-                                <td class="px-6 py-4 text-right font-semibold text-gray-900 dark:text-gray-100">
-                                    {{ s.amount | currency }}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr *ngIf="jobs.length === 0">
+                            <td colspan="3" class="px-8 py-12 text-center text-secondary italic text-xs">No recent job activity recorded for this contact.</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
-        <!-- Right Column: Recent Activity / Logs -->
-        <div class="space-y-8">
-            <div class="bg-card shadow rounded-2xl overflow-hidden border">
-                <div class="px-6 py-4 bg-gray-50 dark:bg-transparent border-b flex items-center gap-3">
-                    <mat-icon class="icon-size-5 text-primary" [svgIcon]="'heroicons_outline:list-bullet'"></mat-icon>
-                    <span class="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-widest">Recent Jobs</span>
-                </div>
-                <div class="p-6">
-                    <div *ngIf="jobs.length === 0" class="text-center py-8 text-hint text-xs">
-                        No job history found.
-                    </div>
-                    <div class="space-y-4">
-                        <div *ngFor="let job of jobs | slice:0:5" class="flex items-start gap-4 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-all border border-transparent hover:border-divider cursor-pointer">
-                            <div class="w-2 h-10 rounded-full" [ngClass]="'bg-' + (job.statusColor || 'gray') + '-500'"></div>
-                            <div class="flex flex-col flex-auto min-w-0">
-                                <span class="text-xs font-bold text-gray-900 dark:text-gray-100 truncate">{{ job.caption }}</span>
-                                <span class="text-[10px] text-secondary font-medium">{{ job.assignDate | date:'MMM dd' }} · {{ job.statusName }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    </div>
+
+    <!-- Footer Copyright (Only show on print) -->
+    <div class="hidden print:block mt-12 text-center text-[10px] text-gray-400 border-t border-divider pt-6">
+        &copy; {{ currentYear }} SuperSmartPlans CRM Portfolio Report · Confidential Document · Generated on {{ currentYear }}-{{ currentYear }}
     </div>
 </div>
+
+<style>
+    @media print {
+        @page {
+            size: A4;
+            margin: 10mm;
+        }
+        
+        body {
+            background: white !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        body * {
+            visibility: hidden;
+        }
+
+        #print-area, #print-area * {
+            visibility: visible;
+        }
+
+        #print-area {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        /* HIDE THE TAB BAR AND SURROUNDING UI GLOBALLY */
+        .mat-mdc-tab-header, .mat-tab-header {
+            display: none !important;
+        }
+
+        .bg-card.shadow.rounded-2xl.overflow-hidden.p-8.border.border-divider {
+            border: 1px solid #e2e8f0 !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin-bottom: 20px !important;
+        }
+        
+        /* Remove padding from main content area for print */
+        .flex-auto.p-6.sm\:p-10 {
+            padding: 0 !important;
+        }
+
+        .bg-card {
+            background-color: white !important;
+            border: 1px solid #e2e8f0 !important;
+        }
+
+        .text-primary {
+            color: #4f46e5 !important;
+        }
+
+        .bg-gray-50 {
+            background-color: #f8fafc !important;
+        }
+
+        .border-divider {
+            border-color: #e2e8f0 !important;
+        }
+        
+        th {
+            background-color: #f1f5f9 !important;
+            color: #475569 !important;
+            border: 1px solid #e2e8f0 !important;
+        }
+
+        td {
+            border: 1px solid #f1f5f9 !important;
+        }
+    }
+</style>

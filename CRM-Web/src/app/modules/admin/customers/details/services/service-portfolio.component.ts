@@ -22,8 +22,7 @@ import { ServiceDialogComponent } from './service-dialog/service-dialog.componen
         MatIconModule,
         MatTableModule,
         MatDialogModule,
-        MatTooltipModule,
-        ServiceDialogComponent
+        MatTooltipModule
     ],
     templateUrl: './service-portfolio.component.html'
 })
