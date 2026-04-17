@@ -69,6 +69,15 @@
                     <div class="mt-8">
                         <mat-tab-group class="fuse-mat-no-subscript" animationDuration="200ms">
                             
+                            <!-- SUMMARY TAB -->
+                            <mat-tab *ngIf="editMode">
+                                <ng-template mat-tab-label>
+                                    <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_outline:presentation-chart-bar'"></mat-icon>
+                                    Summary
+                                </ng-template>
+                                <customer-summary [customerId]="customerId" [customer]="customerForm.value"></customer-summary>
+                            </mat-tab>
+
                             <!-- COMMON DETAIL TAB -->
                             <mat-tab>
                                 <ng-template mat-tab-label>

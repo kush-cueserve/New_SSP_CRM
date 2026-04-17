@@ -1,0 +1,151 @@
+<div class="flex flex-col flex-auto p-6 md:p-8 space-y-8">
+    
+    <!-- KPI Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Status Card -->
+        <div class="flex flex-col p-6 bg-card shadow rounded-2xl border-b-4 border-emerald-500">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-xs font-bold text-secondary uppercase tracking-widest">Account Status</span>
+                <mat-icon class="icon-size-5 text-emerald-500" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+            </div>
+            <div class="text-3xl font-extrabold text-gray-900 dark:text-gray-100">{{ customer?.isActive ? 'ACTIVE' : 'INACTIVE' }}</div>
+            <div class="mt-1 text-xs text-secondary font-medium">Current operational state</div>
+        </div>
+
+        <!-- Verification Card -->
+        <div class="flex flex-col p-6 bg-card shadow rounded-2xl border-b-4" 
+             [ngClass]="customer?.lastVarifiedDate ? 'border-blue-500' : 'border-amber-500'">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-xs font-bold text-secondary uppercase tracking-widest">Verification</span>
+                <mat-icon class="icon-size-5" 
+                          [ngClass]="customer?.lastVarifiedDate ? 'text-blue-500' : 'text-amber-500'"
+                          [svgIcon]="customer?.lastVarifiedDate ? 'heroicons_solid:shield-check' : 'heroicons_solid:shield-exclamation'"></mat-icon>
+            </div>
+            <div class="text-3xl font-extrabold text-gray-900 dark:text-gray-100">{{ customer?.lastVarifiedDate ? 'VERIFIED' : 'PENDING' }}</div>
+            <div class="mt-1 text-xs text-secondary font-medium">
+                {{ customer?.lastVarifiedDate ? 'Validated on ' + (customer?.lastVarifiedDate | date:'MMM dd, yyyy') : 'Awaiting identification check' }}
+            </div>
+        </div>
+
+        <!-- Annual Value Card -->
+        <div class="flex flex-col p-6 bg-card shadow rounded-2xl border-b-4 border-indigo-500">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-xs font-bold text-secondary uppercase tracking-widest">Est. Annual Value</span>
+                <mat-icon class="icon-size-5 text-indigo-500" [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+            </div>
+            <div class="text-3xl font-extrabold text-gray-900 dark:text-gray-100">{{ totalFees | currency }}</div>
+            <div class="mt-1 text-xs text-secondary font-medium">Based on service portfolio</div>
+        </div>
+
+        <!-- Active Jobs Card -->
+        <div class="flex flex-col p-6 bg-card shadow rounded-2xl border-b-4 border-purple-500">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-xs font-bold text-secondary uppercase tracking-widest">Active Jobs</span>
+                <mat-icon class="icon-size-5 text-purple-500" [svgIcon]="'heroicons_solid:briefcase'"></mat-icon>
+            </div>
+            <div class="text-3xl font-extrabold text-gray-900 dark:text-gray-100">{{ activeJobsCount }}</div>
+            <div class="mt-1 text-xs text-secondary font-medium">In-progress deliverables</div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left Column: Quick Profile -->
+        <div class="lg:col-span-2 space-y-8">
+            
+            <!-- Quick Info -->
+            <div class="bg-card shadow rounded-2xl overflow-hidden border">
+                <div class="px-6 py-4 bg-gray-50 dark:bg-transparent border-b flex items-center gap-3">
+                    <mat-icon class="icon-size-5 text-primary" [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
+                    <span class="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-widest">Quick Profile</span>
+                </div>
+                <div class="p-8 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+                    <div class="flex flex-col">
+                        <span class="text-[10px] font-bold text-secondary uppercase tracking-widest mb-1">Trading Name</span>
+                        <span class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ customer?.tradingName || 'None' }}</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[10px] font-bold text-secondary uppercase tracking-widest mb-1">Registration (ABN/TFN)</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-semibold text-gray-900 dark:text-gray-100" *ngIf="customer?.abnNumber">ABN: {{ customer?.abnNumber }}</span>
+                            <span class="text-xs text-hint" *ngIf="customer?.abnNumber && customer?.tfnNumber">|</span>
+                            <span class="text-sm font-semibold text-gray-900 dark:text-gray-100" *ngIf="customer?.tfnNumber">TFN: {{ customer?.tfnNumber }}</span>
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[10px] font-bold text-secondary uppercase tracking-widest mb-1">Primary Contact</span>
+                        <span class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ customer?.contactInfo?.contactName || 'Unassigned' }}</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[10px] font-bold text-secondary uppercase tracking-widest mb-1">Mobile / Cell</span>
+                        <span class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ customer?.contactInfo?.cellPhone || 'No Number' }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Services Summary -->
+            <div class="bg-card shadow rounded-2xl overflow-hidden border">
+                <div class="px-6 py-4 bg-gray-50 dark:bg-transparent border-b flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <mat-icon class="icon-size-5 text-primary" [svgIcon]="'heroicons_outline:clipboard-document-list'"></mat-icon>
+                        <span class="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-widest">Service Breakdown</span>
+                    </div>
+                </div>
+                <div class="p-0">
+                    <div *ngIf="services.length === 0" class="p-12 text-center text-secondary">
+                        No services assigned to this customer yet.
+                    </div>
+                    <table *ngIf="services.length > 0" class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50/50 dark:bg-gray-800/50 text-[10px] font-bold text-secondary uppercase tracking-widest">
+                                <th class="px-6 py-3">Service</th>
+                                <th class="px-6 py-3">Frequency</th>
+                                <th class="px-6 py-3 text-right">Fee</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+                            <tr *ngFor="let s of services" class="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
+                                <td class="px-6 py-4">
+                                    <span class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ s.serviceName }}</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200">
+                                        {{ s.unit === 'y' ? 'YEARLY' : s.unit === 'q' ? 'QUARTERLY' : s.unit === 'm' ? 'MONTHLY' : 'PERIODIC' }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-right font-semibold text-gray-900 dark:text-gray-100">
+                                    {{ s.amount | currency }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Recent Activity / Logs -->
+        <div class="space-y-8">
+            <div class="bg-card shadow rounded-2xl overflow-hidden border">
+                <div class="px-6 py-4 bg-gray-50 dark:bg-transparent border-b flex items-center gap-3">
+                    <mat-icon class="icon-size-5 text-primary" [svgIcon]="'heroicons_outline:list-bullet'"></mat-icon>
+                    <span class="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-widest">Recent Jobs</span>
+                </div>
+                <div class="p-6">
+                    <div *ngIf="jobs.length === 0" class="text-center py-8 text-hint text-xs">
+                        No job history found.
+                    </div>
+                    <div class="space-y-4">
+                        <div *ngFor="let job of jobs | slice:0:5" class="flex items-start gap-4 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-all border border-transparent hover:border-divider cursor-pointer">
+                            <div class="w-2 h-10 rounded-full" [ngClass]="'bg-' + (job.statusColor || 'gray') + '-500'"></div>
+                            <div class="flex flex-col flex-auto min-w-0">
+                                <span class="text-xs font-bold text-gray-900 dark:text-gray-100 truncate">{{ job.caption }}</span>
+                                <span class="text-[10px] text-secondary font-medium">{{ job.assignDate | date:'MMM dd' }} · {{ job.statusName }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

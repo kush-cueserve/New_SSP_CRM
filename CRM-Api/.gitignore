@@ -60,3 +60,11 @@ $RECYCLE.BIN/
 # Environment Files
 appsettings.Development.json
 # appsettings.json (Optional: uncomment if you want to keep the main config local only)
+
+# CRM Specific Logs
+build_err.log
+build_errors.txt
+build_errors_2.txt
+build_logs.txt
+build_output.txt
+*.log

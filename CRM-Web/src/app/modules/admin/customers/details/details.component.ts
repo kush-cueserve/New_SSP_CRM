@@ -35,6 +35,7 @@ import { DynamicFieldsComponent } from './dynamic-fields/dynamic-fields.componen
 import { NotesComponent } from './notes/notes.component';
 import { RelationshipsComponent } from './relationships/relationships.component';
 import { ServicePortfolioComponent } from './services/service-portfolio.component';
+import { SummaryComponent } from './summary/summary.component';
 
 @Component({
     selector     : 'customers-details',
@@ -65,7 +66,8 @@ import { ServicePortfolioComponent } from './services/service-portfolio.componen
         DynamicFieldsComponent,
         NotesComponent,
         RelationshipsComponent,
-        ServicePortfolioComponent
+        ServicePortfolioComponent,
+        SummaryComponent
     ]
 })
 export class DetailsComponent implements OnInit, OnDestroy {
