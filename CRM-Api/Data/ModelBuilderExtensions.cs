@@ -528,6 +528,46 @@ namespace CRM_Api.Data
                 new ServiceMaster { Id = 9, Name = "SMSF Audit & Tax", Description = "Self-Managed Super Fund compliance" },
                 new ServiceMaster { Id = 10, Name = "General Consulting", Description = "Strategic business and tax advice" }
             );
+
+            // Seed FSNoteMaster (Types for Financial Services Notes)
+            modelBuilder.Entity<FSNoteMaster>().HasData(
+                new FSNoteMaster { Id = 1, NoteType = "Retained Earnings", SortOrder = 1, IsActive = true },
+                new FSNoteMaster { Id = 2, NoteType = "Common Note", SortOrder = 2, IsActive = true }
+            );
+
+            // Seed FormMaster (Forms from old system)
+            modelBuilder.Entity<FormMaster>().HasData(
+                new FormMaster { Id = 1, Name = "Individual Tax Return", Slug = "individual-tax-return", Category = "Tax", Icon = "heroicons_outline:document-text", AllowPdf = true, AllowEmail = true, AllowView = true, DisplayOrder = 1 },
+                new FormMaster { Id = 2, Name = "BAS Bookkeeping Checklist", Slug = "bas-bookkeeping-checklist", Category = "Checklist", Icon = "heroicons_outline:clipboard-list", AllowPdf = true, AllowEmail = false, AllowView = true, DisplayOrder = 2 },
+                new FormMaster { Id = 3, Name = "BAS Lodgment Checklist", Slug = "bas-lodgment-checklist", Category = "Checklist", Icon = "heroicons_outline:clipboard-list", AllowPdf = true, AllowEmail = false, AllowView = true, DisplayOrder = 3 },
+                new FormMaster { Id = 4, Name = "Tax Return Partnership", Slug = "tax-return-partnership", Category = "Tax", Icon = "heroicons_outline:document-text", AllowPdf = true, AllowEmail = false, AllowView = true, DisplayOrder = 4 },
+                new FormMaster { Id = 5, Name = "Tax Return Company", Slug = "tax-return-company", Category = "Tax", Icon = "heroicons_outline:document-text", AllowPdf = true, AllowEmail = false, AllowView = true, DisplayOrder = 5 },
+                new FormMaster { Id = 6, Name = "Business Registration", Slug = "business-registration", Category = "Registration", Icon = "heroicons_outline:briefcase", AllowPdf = true, AllowEmail = true, AllowView = true, DisplayOrder = 6 },
+                new FormMaster { Id = 7, Name = "Bookkeeping Set", Slug = "bookkeeping-set", Category = "Accounts", Icon = "heroicons_outline:calculator", AllowPdf = true, AllowEmail = true, AllowView = true, DisplayOrder = 7 },
+                new FormMaster { Id = 8, Name = "Employee Details", Slug = "employee-details", Category = "HR", Icon = "heroicons_outline:user", AllowPdf = true, AllowEmail = true, AllowView = true, DisplayOrder = 8 },
+                new FormMaster { Id = 9, Name = "Inquiry form", Slug = "inquiry-form", Category = "General", Icon = "heroicons_outline:question-mark-circle", AllowPdf = true, AllowEmail = true, AllowView = true, DisplayOrder = 9 },
+                new FormMaster { Id = 10, Name = "Client Enrollment", Slug = "client-enrollment", Category = "General", Icon = "heroicons_outline:user-add", AllowPdf = true, AllowEmail = true, AllowView = true, DisplayOrder = 10 },
+                new FormMaster { Id = 11, Name = "Rental Property", Slug = "rental-property", Category = "Tax", Icon = "heroicons_outline:home", AllowPdf = true, AllowEmail = true, AllowView = true, DisplayOrder = 11 },
+                new FormMaster { Id = 12, Name = "Update Client Details", Slug = "update-client-details", Category = "General", Icon = "heroicons_outline:refresh", AllowPdf = true, AllowEmail = true, AllowView = true, DisplayOrder = 12 },
+                new FormMaster { Id = 13, Name = "SuperAnnuation Claim", Slug = "superannuation-claim", Category = "Finance", Icon = "heroicons_outline:cash", AllowPdf = true, AllowEmail = true, AllowView = true, DisplayOrder = 13 },
+                new FormMaster { Id = 14, Name = "BAS Reminder", Slug = "bas-reminder", Category = "Checklist", Icon = "heroicons_outline:clock", AllowPdf = false, AllowEmail = true, AllowView = true, DisplayOrder = 14 },
+                new FormMaster { Id = 15, Name = "Announcement", Slug = "announcement", Category = "General", Icon = "heroicons_outline:speakerphone", AllowPdf = false, AllowEmail = true, AllowView = true, DisplayOrder = 15 },
+                new FormMaster { Id = 16, Name = "Investment Client Form", Slug = "investment-client-form", Category = "Finance", Icon = "heroicons_outline:chart-pie", AllowPdf = true, AllowEmail = true, AllowView = true, DisplayOrder = 16 },
+                new FormMaster { Id = 17, Name = "Employee Details (For SSP Staff only)", Slug = "employee-details-staff", Category = "HR", Icon = "heroicons_outline:user-group", AllowPdf = true, AllowEmail = true, AllowView = true, DisplayOrder = 17 },
+                new FormMaster { Id = 18, Name = "Call Tracker", Slug = "call-tracker", Category = "General", Icon = "heroicons_outline:phone", AllowPdf = true, AllowEmail = false, AllowView = true, DisplayOrder = 18 },
+                new FormMaster { Id = 19, Name = "Daily Diary", Slug = "daily-diary", Category = "General", Icon = "heroicons_outline:calendar", AllowPdf = true, AllowEmail = false, AllowView = true, DisplayOrder = 19 },
+                new FormMaster { Id = 20, Name = "JatForm", Slug = "jatform", Category = "General", Icon = "heroicons_outline:external-link", AllowPdf = false, AllowEmail = false, AllowView = true, DisplayOrder = 20 },
+                new FormMaster { Id = 21, Name = "Commonwealth Bank Home Loan Calculators", Slug = "cba-home-loan-calc", Category = "External", Icon = "heroicons_outline:calculator", AllowPdf = false, AllowEmail = false, AllowView = true, DisplayOrder = 21 },
+                new FormMaster { Id = 22, Name = "Pay Calculator Australia", Slug = "pay-calc-au", Category = "External", Icon = "heroicons_outline:calculator", AllowPdf = false, AllowEmail = false, AllowView = true, DisplayOrder = 22 },
+                new FormMaster { Id = 23, Name = "Home Loan Application", Slug = "home-loan-application", Category = "Finance", Icon = "heroicons_outline:home", AllowPdf = true, AllowEmail = true, AllowView = true, DisplayOrder = 23 },
+                new FormMaster { Id = 24, Name = "Authority DASP", Slug = "authority-dasp", Category = "Finance", Icon = "heroicons_outline:download", AllowPdf = false, AllowEmail = false, AllowView = true, AllowDownload = true, DisplayOrder = 24 },
+                new FormMaster { Id = 25, Name = "Letterhead", Slug = "letterhead", Category = "Templates", Icon = "heroicons_outline:mail", AllowPdf = false, AllowEmail = false, AllowView = true, AllowDownload = true, DisplayOrder = 25 },
+                new FormMaster { Id = 26, Name = "Sukhwinder Letterhead", Slug = "letterhead-sukhwinder", Category = "Templates", Icon = "heroicons_outline:mail", AllowPdf = false, AllowEmail = false, AllowView = true, AllowDownload = true, DisplayOrder = 26 },
+                new FormMaster { Id = 27, Name = "Letterhead SSP2 - Gaurav Mittal", Slug = "letterhead-gaurav", Category = "Templates", Icon = "heroicons_outline:mail", AllowPdf = false, AllowEmail = false, AllowView = true, AllowDownload = true, DisplayOrder = 27 },
+                new FormMaster { Id = 28, Name = "Letterhead SSP2 - Napa Arinaphat", Slug = "letterhead-napa", Category = "Templates", Icon = "heroicons_outline:mail", AllowPdf = false, AllowEmail = false, AllowView = true, AllowDownload = true, DisplayOrder = 28 },
+                new FormMaster { Id = 29, Name = "Don't Tell Tiger Letterhead - Napa", Slug = "letterhead-tiger-napa", Category = "Templates", Icon = "heroicons_outline:mail", AllowPdf = false, AllowEmail = false, AllowView = true, AllowDownload = true, DisplayOrder = 29 },
+                new FormMaster { Id = 30, Name = "Don't Tell Tiger Letterhead - Sukhwinder", Slug = "letterhead-tiger-sukhwinder", Category = "Templates", Icon = "heroicons_outline:mail", AllowPdf = false, AllowEmail = false, AllowView = true, AllowDownload = true, DisplayOrder = 30 }
+            );
         }
     }
 }

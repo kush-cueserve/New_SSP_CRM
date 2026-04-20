@@ -361,7 +361,25 @@ namespace CRM_Api.Services
                     _context.TrustInfos.Add(trust);
                 }
 
-                // 3. Addresses
+                /* Branch Saving Disabled
+                var branchMap = new Dictionary<string, int>();
+                if (dto.Branches != null)
+                {
+                    foreach (var bDto in dto.Branches)
+                    {
+                        var branch = new Branch
+                        {
+                            CustomerID = customer.Id,
+                            BranchName = bDto.BranchName
+                        };
+                        _context.Branches.Add(branch);
+                        await _context.SaveChangesAsync();
+                        branchMap[bDto.BranchName] = branch.Id;
+                    }
+                }
+                */
+
+                // 4. Addresses
                 if (dto.Addresses != null)
                 {
                     foreach (var addrDto in dto.Addresses)
@@ -375,13 +393,22 @@ namespace CRM_Api.Services
                             City = addrDto.City,
                             State = addrDto.State,
                             PostalCode = addrDto.PostalCode,
-                            Country = addrDto.Country
+                            Country = addrDto.Country,
+                            BranchID = addrDto.BranchID
                         };
+
+                        /* Branch Linking Disabled
+                        if (!string.IsNullOrEmpty(addrDto.BranchName) && branchMap.ContainsKey(addrDto.BranchName))
+                        {
+                            addr.BranchID = branchMap[addrDto.BranchName];
+                        }
+                        */
+
                         _context.Addresses.Add(addr);
                     }
                 }
 
-                // 4. Bank Accounts
+                // 5. Bank Accounts
                 if (dto.BankAccounts != null)
                 {
                     foreach (var bankDto in dto.BankAccounts)
@@ -569,6 +596,7 @@ namespace CRM_Api.Services
                             existing.State = addrDto.State;
                             existing.PostalCode = addrDto.PostalCode;
                             existing.Country = addrDto.Country;
+                            existing.BranchID = addrDto.BranchID;
                             existing.UpdateDateTime = DateTime.Now;
                         }
                         else
@@ -583,6 +611,7 @@ namespace CRM_Api.Services
                                 State = addrDto.State,
                                 PostalCode = addrDto.PostalCode,
                                 Country = addrDto.Country,
+                                BranchID = addrDto.BranchID,
                                 UpdateDateTime = DateTime.Now
                             });
                         }

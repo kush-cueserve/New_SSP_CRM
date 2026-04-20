@@ -108,6 +108,7 @@ namespace CRM_Api.DTOs
         public TrustInfoDto? TrustInfo { get; set; }
         public SolePropriterInfoDto? SolePropriterInfo { get; set; }
         public List<AddressDto>? Addresses { get; set; }
+        public List<BranchDto>? Branches { get; set; }
         public List<BankAccountDto>? BankAccounts { get; set; }
         public List<UpsertDynamicFieldValueDto>? DynamicFieldValues { get; set; }
         public List<CreateCustomerRelationshipDto>? Relationships { get; set; }
@@ -173,6 +174,8 @@ namespace CRM_Api.DTOs
         public string? State { get; set; }
         public string? PostalCode { get; set; }
         public string? Country { get; set; }
+        public int? BranchID { get; set; }
+        public string? BranchName { get; set; }
     }
 
     public class BankAccountDto
@@ -227,5 +230,12 @@ namespace CRM_Api.DTOs
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
+    }
+
+    public class BranchDto
+    {
+        public int Id { get; set; }
+        public int CustomerId { get; set; }
+        public string? BranchName { get; set; }
     }
 }

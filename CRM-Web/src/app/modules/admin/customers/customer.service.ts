@@ -140,4 +140,40 @@ export class CustomerService {
     deleteCustomerService(id: number): Observable<any> {
         return this._httpClient.delete<any>(`${this._baseUrl}/services/${id}`);
     }
+
+    /**
+     * Checklist Methods
+     */
+    getChecklist(customerId: number): Observable<any[]> {
+        return this._httpClient.get<any[]>(`${this._baseApiUrl}/api/Checklist/${customerId}`).pipe(
+            map(data => toCamelCase(data))
+        );
+    }
+
+    toggleChecklistStatus(customerId: number, checklistMasterId: number, isCompleted: boolean, notes: string = null): Observable<any> {
+        return this._httpClient.post<any>(`${this._baseApiUrl}/api/Checklist/toggle`, {
+            customerId,
+            checklistMasterId,
+            isCompleted,
+            notes
+        });
+    }
+    /**
+     * Branch Methods
+     */
+    getBranches(customerId: number): Observable<any[]> {
+        return this._httpClient.get<any[]>(`${this._baseApiUrl}/api/Branch/customer/${customerId}`);
+    }
+
+    createBranch(branch: any): Observable<any> {
+        return this._httpClient.post<any>(`${this._baseApiUrl}/api/Branch`, branch);
+    }
+
+    updateBranch(id: number, branch: any): Observable<void> {
+        return this._httpClient.put<void>(`${this._baseApiUrl}/api/Branch/${id}`, branch);
+    }
+
+    deleteBranch(id: number): Observable<void> {
+        return this._httpClient.delete<void>(`${this._baseApiUrl}/api/Branch/${id}`);
+    }
 }

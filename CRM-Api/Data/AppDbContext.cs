@@ -24,6 +24,7 @@ namespace CRM_Api.Data
         public DbSet<RelationShipType> RelationShipTypes { get; set; } = null!;
         public DbSet<Customer> Customers { get; set; } = null!;
         public DbSet<JobStatusMaster> JobStatusMasters { get; set; } = null!;
+        public DbSet<FormMaster> FormMasters { get; set; }
         public DbSet<TypeMaster> TypeMasters { get; set; } = null!;
         public DbSet<CustomerType> CustomerTypes { get; set; } = null!;
         public DbSet<BusinessType> BusinessTypes { get; set; } = null!;
@@ -40,6 +41,7 @@ namespace CRM_Api.Data
         public DbSet<SolePropriterInfo> SolePropriterInfos { get; set; } = null!;
         public DbSet<ContactInfo> ContactInfos { get; set; } = null!;
         public DbSet<Address> Addresses { get; set; } = null!;
+        public DbSet<Branch> Branches { get; set; } = null!;
         public DbSet<FileUploadInfo> FileUploadInfos { get; set; } = null!;
         public DbSet<BankAccount> BankAccounts { get; set; } = null!;
         public DbSet<UserTodo> UserTodos { get; set; } = null!;
@@ -51,6 +53,10 @@ namespace CRM_Api.Data
         public DbSet<JobTypeStatusMapping> JobTypeStatusMappings { get; set; } = null!;
         public DbSet<ServiceMaster> ServiceMasters { get; set; } = null!;
         public DbSet<CustomerServiceDetail> CustomerServices { get; set; } = null!;
+        public DbSet<ChecklistMaster> ChecklistMasters { get; set; } = null!;
+        public DbSet<CustomerChecklistStatus> CustomerChecklistStatuses { get; set; } = null!;
+        public DbSet<FSNoteMaster> FSNoteMasters { get; set; } = null!;
+        public DbSet<CustomerFSNote> CustomerFSNotes { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

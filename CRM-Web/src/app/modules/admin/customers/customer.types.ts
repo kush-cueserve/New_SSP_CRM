@@ -31,6 +31,7 @@ export interface Customer {
     bankAccounts?: BankAccount[];
     dynamicFieldValues?: UpsertDynamicFieldValue[];
     relationships?: CreateCustomerRelationship[];
+    branches?: Branch[];
 }
 
 export interface BankAccount {
@@ -62,6 +63,7 @@ export interface Address {
     state?: string;
     postalCode?: string;
     country?: string;
+    branchId?: number;
 }
 
 export interface ContactInfo {
@@ -180,5 +182,11 @@ export interface CustomerServicePortfolio {
     updateUserId?: number;
     updateUserName?: string;
     updateDateTime?: string | Date;
+}
+
+export interface Branch {
+    id: number;
+    customerId: number;
+    branchName: string;
 }
 

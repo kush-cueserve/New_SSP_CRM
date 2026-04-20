@@ -36,6 +36,9 @@ import { NotesComponent } from './notes/notes.component';
 import { RelationshipsComponent } from './relationships/relationships.component';
 import { ServicePortfolioComponent } from './services/service-portfolio.component';
 import { SummaryComponent } from './summary/summary.component';
+import { AdminChecklistComponent } from './admin-checklist/admin-checklist.component';
+import { FSNotesComponent } from './fs-notes/fs-notes.component';
+
 
 @Component({
     selector     : 'customers-details',
@@ -66,7 +69,9 @@ import { SummaryComponent } from './summary/summary.component';
         NotesComponent,
         RelationshipsComponent,
         ServicePortfolioComponent,
-        SummaryComponent
+        SummaryComponent,
+        AdminChecklistComponent,
+        FSNotesComponent
     ]
 })
 export class DetailsComponent implements OnInit, OnDestroy {
@@ -85,6 +90,8 @@ export class DetailsComponent implements OnInit, OnDestroy {
     editMode: boolean = false;
     customerId: number;
     isSaving: boolean = false;
+    branches: any[] = [];
+    isLoadingBranches: boolean = false;
 
     @ViewChild(DynamicFieldsComponent) dynamicFieldsComponent: DynamicFieldsComponent;
     @ViewChild(RelationshipsComponent) relationshipsComponent: RelationshipsComponent;
@@ -215,6 +222,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
                     this.customerId = +params['id'];
                     this.loadCustomer(this.customerId);
                     this.loadJobs(this.customerId);
+                    // this.loadBranches(this.customerId);
                 } else {
                     this.editMode = false;
                     this.initDefaultAddresses();
@@ -389,9 +397,10 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
     initDefaultAddresses(): void {
         this.addresses.clear();
-        this.addAddressForType(null, 1); // Home 
-        this.addAddressForType(null, 2); // Business
-        this.addAddressForType(null, 3); // Postal
+        // For new customers, we can still provide the 3 defaults but they will be dynamic now
+        this.addAddressForType({ type: 1 }); // Home 
+        this.addAddressForType({ type: 2 }); // Business
+        this.addAddressForType({ type: 3 }); // Postal
     }
 
     get bankAccounts(): FormArray {
@@ -448,7 +457,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
         this.customerForm.markAsDirty();
     }
 
-    addAddressForType(address: any, defaultType: number): void {
+    addAddressForType(address: any = null, defaultType: number = 1): void {
         const addressForm = this._formBuilder.group({
             id: [address?.id || 0],
             type: [address?.type || defaultType],
@@ -457,10 +466,61 @@ export class DetailsComponent implements OnInit, OnDestroy {
             city: [address?.city || ''],
             state: [address?.state || ''],
             postalCode: [address?.postalCode || ''],
-            country: [address?.country || 'Australia']
+            country: [address?.country || 'Australia'],
+            branchId: [address?.branchId || null],
+            branchName: [address?.branchName || '']
         });
         this.addresses.push(addressForm);
     }
+
+    removeAddress(index: number): void {
+        const address = this.addresses.at(index).value;
+        if (address.id > 0) {
+            this._fuseConfirmationService.open({
+                title: 'Remove Address',
+                message: 'Are you sure you want to remove this address? This will be saved when you update the customer.',
+                actions: { confirm: { label: 'Remove', color: 'warn' } }
+            }).afterClosed().subscribe(result => {
+                if (result === 'confirmed') {
+                    this.addresses.removeAt(index);
+                    this.customerForm.markAsDirty();
+                }
+            });
+        } else {
+            this.addresses.removeAt(index);
+        }
+    }
+
+    loadBranches(customerId: number): void {
+        this.isLoadingBranches = true;
+        this._customerService.getBranches(customerId).subscribe(branches => {
+            this.branches = branches;
+            this.isLoadingBranches = false;
+        });
+    }
+
+    /* Branch Management Disabled
+    openManageBranches(): void {
+        const dialogRef = this._matDialog.open(BranchManagerDialogComponent, {
+            width: '600px',
+            data: { 
+                customerId: this.customerId,
+                localBranches: !this.editMode ? this.branches : [] 
+            },
+            disableClose: true
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                if (!this.editMode) {
+                    this.branches = result;
+                } else {
+                    this.loadBranches(this.customerId);
+                }
+            }
+        });
+    }
+    */
 
     loadCustomer(id: number): void {
         this._customerService.getCustomerById(id).subscribe(customer => {
@@ -471,12 +531,13 @@ export class DetailsComponent implements OnInit, OnDestroy {
             
             // Rebuild arrays
             this.addresses.clear();
-            const home = customer.addresses?.find((a: any) => a.type === 1);
-            const biz = customer.addresses?.find((a: any) => a.type === 2);
-            const postal = customer.addresses?.find((a: any) => a.type === 3);
-            this.addAddressForType(home, 1);
-            this.addAddressForType(biz, 2);
-            this.addAddressForType(postal, 3);
+            if (customer.addresses && customer.addresses.length > 0) {
+                customer.addresses.forEach((addr: any) => {
+                    this.addAddressForType(addr);
+                });
+            } else {
+                this.initDefaultAddresses();
+            }
             
             this.bankAccounts.clear();
             if (customer.bankAccounts && customer.bankAccounts.length > 0) {
@@ -577,6 +638,18 @@ export class DetailsComponent implements OnInit, OnDestroy {
         return !(contactType === 4 && clientType === 9);
     }
 
+    showAdminTab(): boolean {
+        const contactType = this.customerForm.get('contactType').value;
+        const clientType = this.customerForm.get('clientType').value;
+        return !((contactType === 4 && clientType === 9) || clientType === 1);
+    }
+
+    showFSNotesTab(): boolean {
+        const clientType = this.customerForm.get('clientType').value;
+        return clientType === 2; // Only for Company
+    }
+
+
     showBusinessType(): boolean {
         const ct = this.customerForm.get('clientType').value;
         return ct === 2 || ct === 3 || ct === 4 || ct === 6;
@@ -632,6 +705,31 @@ export class DetailsComponent implements OnInit, OnDestroy {
     }
 
     private _proceedToSave(data: any): void {
+        /* Branch Mapping Disabled for New Customer
+        if (!this.editMode && this.branches.length > 0) {
+            data.branches = this.branches;
+            
+            if (data.addresses) {
+                data.addresses.forEach(addr => {
+                    if (!addr.branchId || isNaN(Number(addr.branchId))) {
+                        addr.branchId = null;
+                    }
+                    
+                    if (addr.branchId) {
+                        const b = this.branches.find(br => br.id === addr.branchId);
+                        if (b) addr.branchName = b.branchName;
+                    }
+                });
+            }
+        } else if (this.editMode && data.addresses) {
+            data.addresses.forEach(addr => {
+                if (!addr.branchId || isNaN(Number(addr.branchId))) {
+                    addr.branchId = null;
+                }
+            });
+        }
+        */
+
         const request: Observable<any> = this.editMode 
             ? this._customerService.updateCustomer(this.customerId, data)
             : this._customerService.createCustomer(data);

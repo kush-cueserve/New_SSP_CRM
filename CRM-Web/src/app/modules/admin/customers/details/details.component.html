@@ -326,21 +326,65 @@
 
                                         <!-- Address Section -->
                                         <div class="bg-card shadow rounded-2xl p-8 border border-divider">
-                                            <div class="flex items-center justify-between border-b border-divider pb-2 mb-8">
+                                            <div class="flex items-center justify-between border-b border-divider pb-2 mb-6">
                                                 <div class="flex flex-col">
                                                     <span class="text-xl font-extrabold tracking-tight text-primary">Address Locations</span>
-                                                    <span class="text-[10px] font-bold text-secondary uppercase tracking-wider">Standard Regional Contact Points</span>
+                                                    <span class="text-[10px] font-bold text-secondary uppercase tracking-wider">Dynamic Branch & Regional Contact Points</span>
+                                                </div>
+                                                <div class="flex items-center gap-2">
+                                                    <!-- Branch Management Hidden
+                                                    <button type="button" mat-stroked-button class="rounded-xl h-10 px-4" 
+                                                            (click)="openManageBranches()">
+                                                        <mat-icon class="icon-size-4 mr-2" [svgIcon]="'heroicons_solid:building-office'"></mat-icon>
+                                                        Manage Branches
+                                                    </button>
+                                                    -->
+                                                    <button type="button" mat-flat-button color="primary" class="rounded-xl h-10 px-4" 
+                                                            (click)="addAddressForType()">
+                                                        <mat-icon class="icon-size-4 mr-2" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                                                        Add New
+                                                    </button>
                                                 </div>
                                             </div>
                                             
-                                            <div formArrayName="addresses" class="space-y-12">
-                                                <div *ngFor="let addr of addresses.controls; let i = index" [formGroupName]="i" class="p-6 bg-primary/5 dark:bg-primary-500/10 rounded-2xl border border-primary/10">
-                                                    <div class="flex items-center justify-between mb-6">
-                                                        <span class="px-3 py-1 bg-primary-100 dark:bg-primary-500/10 text-primary uppercase text-[10px] font-extrabold tracking-widest rounded">
-                                                            {{ addr.get('type').value === 1 ? 'Home Address' : addr.get('type').value === 2 ? 'Business Address' : 'Postal Address' }}
-                                                        </span>
+                                            <div formArrayName="addresses" class="grid grid-cols-1 gap-8">
+                                                <div *ngFor="let addr of addresses.controls; let i = index" [formGroupName]="i" 
+                                                     class="p-6 bg-white dark:bg-card rounded-3xl border border-divider shadow-sm relative group hover:border-primary/30 transition-all">
+                                                    
+                                                    <!-- Actions -->
+                                                    <div class="absolute top-4 right-4 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <button type="button" mat-icon-button (click)="removeAddress(i)" class="text-rose-500 hover:bg-rose-500/10 w-8 h-8 rounded-full">
+                                                            <mat-icon class="icon-size-4" [svgIcon]="'heroicons_solid:trash'"></mat-icon>
+                                                        </button>
                                                     </div>
-                                                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+                                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                                        <mat-form-field class="fuse-mat-no-subscript">
+                                                            <mat-label>Address Type</mat-label>
+                                                            <mat-select formControlName="type">
+                                                                <mat-option [value]="1">Home Address</mat-option>
+                                                                <mat-option [value]="2">Business Address</mat-option>
+                                                                <mat-option [value]="3">Postal Address</mat-option>
+                                                                <mat-option [value]="4">Branch Office</mat-option>
+                                                                <mat-option [value]="5">Other</mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+
+                                                        <!-- Branch Link Hidden
+                                                        <mat-form-field class="fuse-mat-no-subscript">
+                                                            <mat-label>Link to Branch</mat-label>
+                                                            <mat-select formControlName="branchId">
+                                                                <mat-option [value]="null">No Branch (Default)</mat-option>
+                                                                <mat-option *ngFor="let branch of branches" [value]="branch.id">
+                                                                    {{ branch.branchName }}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                            <mat-hint *ngIf="branches.length === 0">No branches defined</mat-hint>
+                                                        </mat-form-field>
+                                                        -->
+                                                    </div>
+
+                                                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                                                         <mat-form-field class="fuse-mat-no-subscript md:col-span-2">
                                                             <mat-label>Street Address</mat-label>
                                                             <input matInput formControlName="addressLine1">
@@ -719,6 +763,27 @@
                             
                             <mat-tab label="Dynamic Details">
                                 <dynamic-fields [customerId]="customerId"></dynamic-fields>
+                            </mat-tab>
+                            
+                            <mat-tab *ngIf="showAdminTab()" label="Admin" [disabled]="!customerId">
+                                <ng-template mat-tab-label>
+                                    <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_outline:clipboard-document-check'"></mat-icon>
+                                    Admin
+                                </ng-template>
+                                
+                                <admin-checklist 
+                                    [customerId]="customerId"
+                                    [isAdmin]="isAdmin"
+                                    [clientType]="customerForm.get('clientType').value">
+                                </admin-checklist>
+                            </mat-tab>
+
+                            <mat-tab *ngIf="showFSNotesTab()" label="Note for FS" [disabled]="!customerId">
+                                <ng-template mat-tab-label>
+                                    <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_outline:document-text'"></mat-icon>
+                                    Note for FS
+                                </ng-template>
+                                <fs-notes [customerId]="customerId"></fs-notes>
                             </mat-tab>
                             
                             <mat-tab label="Relationships">
