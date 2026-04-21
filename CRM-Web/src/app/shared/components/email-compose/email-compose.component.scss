@@ -5,22 +5,29 @@
         min-width: 100%;
     }
 
-    .ql-container {
-        font-family: inherit;
-        font-size: 1rem;
-        border-bottom-left-radius: 0.5rem;
-        border-bottom-right-radius: 0.5rem;
-        border-color: #e2e8f0;
-    }
+    quill-editor {
+        display: flex;
+        flex-direction: column;
+        
+        .ql-container {
+            flex: 1 1 auto;
+            min-height: 200px;
+            font-family: inherit;
+            font-size: 1rem;
+            border-bottom-left-radius: 0.5rem;
+            border-bottom-right-radius: 0.5rem;
+            border-color: #e2e8f0;
+        }
 
-    .ql-toolbar {
-        border-top-left-radius: 0.5rem;
-        border-top-right-radius: 0.5rem;
-        background-color: #f8fafc;
-        border-color: #e2e8f0;
-    }
+        .ql-toolbar {
+            border-top-left-radius: 0.5rem;
+            border-top-right-radius: 0.5rem;
+            background-color: #f8fafc;
+            border-color: #e2e8f0;
+        }
 
-    .ql-editor {
-        min-height: 200px;
+        .ql-editor {
+            min-height: 200px;
+        }
     }
 }

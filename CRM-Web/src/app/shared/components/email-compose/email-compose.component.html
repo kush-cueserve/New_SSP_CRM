@@ -26,9 +26,9 @@
                 <input matInput formControlName="subject" type="text">
             </mat-form-field>
 
-            <div class="flex flex-col mt-2 flex-auto">
+            <div class="flex flex-col mt-2">
                 <div class="text-secondary font-medium mb-2">Message</div>
-                <quill-editor class="w-full h-64 border rounded"
+                <quill-editor class="w-full border rounded flex flex-col"
                               [modules]="modules"
                               formControlName="body"
                               placeholder="Write your message here...">
