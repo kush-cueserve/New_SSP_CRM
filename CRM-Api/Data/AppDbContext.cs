@@ -57,6 +57,7 @@ namespace CRM_Api.Data
         public DbSet<CustomerChecklistStatus> CustomerChecklistStatuses { get; set; } = null!;
         public DbSet<FSNoteMaster> FSNoteMasters { get; set; } = null!;
         public DbSet<CustomerFSNote> CustomerFSNotes { get; set; } = null!;
+        public DbSet<SmtpSetting> SmtpSettings { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

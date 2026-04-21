@@ -16,10 +16,24 @@
     <div class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto">
         <form [formGroup]="composeForm" class="flex flex-col space-y-4">
             
-            <mat-form-field class="w-full fuse-mat-dense">
-                <mat-label>To</mat-label>
-                <input matInput formControlName="to" type="email">
-            </mat-form-field>
+            <!-- Recipient Field -->
+            <ng-container *ngIf="data?.toEmail; else searchableTo">
+                <mat-form-field class="w-full fuse-mat-dense">
+                    <mat-label>To</mat-label>
+                    <input matInput formControlName="to" type="email">
+                </mat-form-field>
+            </ng-container>
+            <ng-template #searchableTo>
+                <searchable-select
+                    [items]="customers"
+                    [label]="'To'"
+                    [placeholder]="'Search client by name or email...'"
+                    [displayKey]="'name'"
+                    [valueKey]="'id'"
+                    [required]="true"
+                    formControlName="to">
+                </searchable-select>
+            </ng-template>
 
             <mat-form-field class="w-full fuse-mat-dense">
                 <mat-label>Subject</mat-label>

@@ -29,6 +29,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type : 'basic',
         icon : 'heroicons_outline:document-duplicate',
         link : '/forms'
+    },
+    {
+        id   : 'settings',
+        title: 'Settings',
+        type : 'basic',
+        icon : 'heroicons_outline:cog',
+        link : '/settings'
     }
 ];
 export const compactNavigation: FuseNavigationItem[] = [

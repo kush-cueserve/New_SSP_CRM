@@ -11,20 +11,56 @@ namespace CRM_Api.Services
 {
     public class EmailService : IEmailService
     {
-        private readonly IConfiguration _config;
+        private readonly ISmtpConfigurationService _smtpConfigService;
+        private readonly ILogger<EmailService> _logger;
 
-        public EmailService(IConfiguration config)
+        public EmailService(ISmtpConfigurationService smtpConfigService, ILogger<EmailService> logger)
         {
-            _config = config;
+            _smtpConfigService = smtpConfigService;
+            _logger = logger;
         }
 
         public async Task SendEmailAsync(string to, string subject, string body, byte[]? attachment = null, string? attachmentFileName = null)
         {
-            var emailSettings = _config.GetSection("EmailSettings");
+            // 1. Get configuration from the Database
+            var dbConfig = await _smtpConfigService.GetActiveConfigurationAsync();
+            
+            if (dbConfig == null)
+            {
+                _logger.LogError("Failed to send email: No active SMTP configuration found.");
+                throw new InvalidOperationException("No active SMTP configuration found in the database. Please configure email settings in the Admin panel.");
+            }
+
+            string host = dbConfig.Host;
+            int port = dbConfig.Port;
+            string username = dbConfig.Username;
+            string password = dbConfig.EncryptedPassword; 
+            string fromEmail = dbConfig.FromEmail;
+            string fromName = dbConfig.FromName;
+
+            _logger.LogInformation("Attempting to send email to {To} via {Host}", to, host);
+
+            List<string> ccEmails = new List<string>();
+            if (!string.IsNullOrEmpty(dbConfig.CCEmailsJson))
+            {
+                try {
+                    ccEmails = System.Text.Json.JsonSerializer.Deserialize<List<string>>(dbConfig.CCEmailsJson) ?? new List<string>();
+                } catch { /* Ignore malformed JSON */ }
+            }
             
             var email = new MimeMessage();
-            email.From.Add(MailboxAddress.Parse(emailSettings["From"]));
+            email.From.Add(new MailboxAddress(fromName, fromEmail));
             email.To.Add(MailboxAddress.Parse(to));
+            
+            // Add CCs in a loop
+            foreach (var cc in ccEmails)
+            {
+                if (!string.IsNullOrWhiteSpace(cc))
+                {
+                    email.Cc.Add(MailboxAddress.Parse(cc.Trim()));
+                }
+            }
+
             email.Subject = subject;
 
             var builder = new BodyBuilder();
@@ -73,19 +109,13 @@ namespace CRM_Api.Services
 
             using var smtp = new SmtpClient();
             
-            // Connect to the SMTP server
-            var host = emailSettings["Host"];
-            var port = int.Parse(emailSettings["Port"] ?? "587");
-            
+            // Connect to the SMTP server using the fetched settings
             await smtp.ConnectAsync(host, port, SecureSocketOptions.StartTls);
             
-            // Authenticate if needed
-            var user = emailSettings["Username"];
-            var pass = emailSettings["Password"];
-            
-            if (!string.IsNullOrEmpty(user) && !string.IsNullOrEmpty(pass))
+            // Authenticate using the fetched credentials
+            if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
             {
-                await smtp.AuthenticateAsync(user, pass);
+                await smtp.AuthenticateAsync(username, password);
             }
 
             await smtp.SendAsync(email);

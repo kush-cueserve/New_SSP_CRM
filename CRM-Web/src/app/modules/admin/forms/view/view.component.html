@@ -1,57 +1,50 @@
-<div class="flex flex-col flex-auto min-w-0 bg-gray-100 dark:bg-transparent overflow-hidden">
+<div class="flex flex-col flex-auto min-w-0">
 
     <!-- Header / Toolbar -->
-    <div class="flex flex-col shadow-sm bg-card relative z-10">
-        <div class="flex items-center justify-between px-6 py-4 md:px-12 border-b bg-white/80 dark:bg-card/80 backdrop-blur-md">
-            <div class="flex items-center">
-                <button mat-icon-button [routerLink]="['/forms']" matTooltip="Back to Forms">
-                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:arrow-left'"></mat-icon>
-                </button>
-                <div class="ml-4 flex flex-col">
-                    <div class="text-xl md:text-2xl font-extrabold tracking-tight leading-none text-gray-900 dark:text-gray-100">{{form?.name}}</div>
-                    <div class="mt-1 text-sm text-secondary flex items-center" *ngIf="customerData">
-                        <mat-icon class="icon-size-4 mr-1 text-primary-500" [svgIcon]="'heroicons_solid:user'"></mat-icon>
-                        <span>Client: <span class="font-bold text-primary-600 dark:text-primary-400 uppercase tracking-wider">{{customerData.name}}</span></span>
-                    </div>
+    <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:pt-10 sm:pb-8 sm:px-10 border-b bg-card dark:bg-transparent">
+        <div class="flex items-center">
+            <button mat-icon-button [routerLink]="['/forms']" matTooltip="Back to Forms">
+                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:arrow-left'"></mat-icon>
+            </button>
+            <div class="ml-4">
+                <div class="text-4xl font-extrabold tracking-tight leading-none">{{form?.name}}</div>
+                <div class="mt-1.5 text-lg text-secondary flex items-center" *ngIf="customerData">
+                    <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:user'"></mat-icon>
+                    <span>Client: <span class="font-medium text-primary">{{customerData.name}}</span></span>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Main Content -->
-    <div class="flex-auto overflow-y-auto bg-gray-50 dark:bg-transparent relative">
-        <!-- Workspace Background Pattern -->
-        <div class="absolute inset-0 bg-grid-slate-200 [mask-image:linear-gradient(0deg,#fff,rgba(255,255,255,0.6))] dark:bg-grid-slate-700/20 dark:[mask-image:linear-gradient(0deg,rgba(255,255,255,0.1),rgba(255,255,255,0.5))] pointer-events-none"></div>
-
-        <div class="relative max-w-4xl mx-auto py-12 px-6 sm:py-24 sm:px-10 flex flex-col items-center">
+    <div class="flex-auto p-6 sm:p-10 bg-gray-50 dark:bg-transparent">
+        <div class="max-w-4xl mx-auto">
             
-            <!-- Document Hero Card -->
-            <div class="w-full bg-white dark:bg-slate-900 shadow-2xl rounded-[2.5rem] p-10 md:p-16 border border-gray-200 dark:border-gray-800 transition-all duration-300 transform hover:scale-[1.01]">
+            <!-- Standard Fuse Card -->
+            <div class="flex flex-col bg-card shadow rounded-2xl overflow-hidden">
                 
-                <div class="flex flex-col md:flex-row items-center gap-10">
+                <div class="flex flex-col md:flex-row items-center p-8 sm:p-12 gap-8">
                     <!-- Icon Representation -->
-                    <div class="w-40 h-40 md:w-56 md:h-56 rounded-3xl bg-primary-500/10 flex items-center justify-center relative overflow-hidden group">
-                        <div class="absolute inset-0 bg-primary-500/5 group-hover:bg-primary-500/10 transition-colors duration-500"></div>
-                        <mat-icon class="icon-size-24 md:icon-size-32 text-primary-500 z-10" [svgIcon]="form?.icon || 'heroicons_outline:document-text'"></mat-icon>
-                        <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-primary-500/20 rounded-full blur-2xl"></div>
+                    <div class="flex shrink-0 items-center justify-center w-32 h-32 rounded-full bg-primary-100 text-primary-600 dark:bg-primary-800 dark:text-primary-100">
+                        <mat-icon class="icon-size-16 text-current" [svgIcon]="form?.icon || 'heroicons_outline:document-text'"></mat-icon>
                     </div>
 
                     <!-- Details & Action -->
-                    <div class="flex-1 flex flex-col items-center md:items-start text-center md:text-left">
-                        <h2 class="text-3xl md:text-5xl font-black text-gray-900 dark:text-gray-100 tracking-tight leading-tight mb-4">
+                    <div class="flex flex-col items-center md:items-start text-center md:text-left flex-auto">
+                        <div class="text-2xl font-bold tracking-tight mb-2">
                             Your Document is Ready
-                        </h2>
-                        <p class="text-lg md:text-xl text-secondary mb-8 leading-relaxed max-w-lg">
+                        </div>
+                        <div class="text-lg text-secondary mb-8">
                             We've pre-filled the <strong>{{form?.name}}</strong> for <strong>{{customerData?.name}}</strong>. You can now download the official PDF generated directly from the backend.
-                        </p>
+                        </div>
 
-                        <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                            <button mat-flat-button [color]="'primary'" (click)="download()" [disabled]="isLoading" class="h-16 px-10 rounded-2xl text-lg font-bold shadow-xl shadow-primary-500/30 hover:shadow-primary-500/50 transition-all duration-300">
-                                <mat-icon class="icon-size-6 mr-3" [svgIcon]="'heroicons_outline:arrow-down-tray'"></mat-icon>
+                        <div class="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+                            <button mat-flat-button [color]="'primary'" (click)="download()" [disabled]="isLoading" class="w-full sm:w-auto px-8">
+                                <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_outline:arrow-down-tray'"></mat-icon>
                                 <span>Download PDF</span>
                             </button>
-                            <button mat-stroked-button (click)="email()" [disabled]="isLoading" class="h-16 px-10 rounded-2xl text-lg font-bold">
-                                <mat-icon class="icon-size-6 mr-3" [svgIcon]="'heroicons_outline:envelope'"></mat-icon>
+                            <button mat-stroked-button (click)="email()" [disabled]="isLoading" class="w-full sm:w-auto px-8">
+                                <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_outline:envelope'"></mat-icon>
                                 <span>Email to Client</span>
                             </button>
                         </div>
@@ -59,41 +52,26 @@
                 </div>
 
                 <!-- Features Footer -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 pt-10 border-t border-gray-100 dark:border-gray-800">
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
-                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
-                        </div>
-                        <span class="text-sm font-semibold text-secondary uppercase tracking-wider">Auto-Filled Data</span>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 p-8 border-t bg-gray-50 dark:bg-transparent">
+                    <div class="flex items-center gap-3">
+                        <mat-icon class="icon-size-5 text-green-600 dark:text-green-500" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+                        <span class="text-sm font-medium text-secondary">Auto-Filled Data</span>
                     </div>
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-full bg-indigo-500/10 text-indigo-500 flex items-center justify-center">
-                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:shield-check'"></mat-icon>
-                        </div>
-                        <span class="text-sm font-semibold text-secondary uppercase tracking-wider">Official Template</span>
+                    <div class="flex items-center gap-3">
+                        <mat-icon class="icon-size-5 text-blue-600 dark:text-blue-500" [svgIcon]="'heroicons_solid:shield-check'"></mat-icon>
+                        <span class="text-sm font-medium text-secondary">Official Template</span>
                     </div>
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center">
-                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:lightning-bolt'"></mat-icon>
-                        </div>
-                        <span class="text-sm font-semibold text-secondary uppercase tracking-wider">Live PDF Engine</span>
+                    <div class="flex items-center gap-3">
+                        <mat-icon class="icon-size-5 text-orange-600 dark:text-orange-500" [svgIcon]="'heroicons_solid:lightning-bolt'"></mat-icon>
+                        <span class="text-sm font-medium text-secondary">Live PDF Engine</span>
                     </div>
                 </div>
             </div>
 
             <!-- Additional Help / Info -->
-            <div class="mt-12 text-center text-secondary opacity-60 text-sm italic">
+            <div class="mt-8 text-center text-secondary text-sm">
                 The generated PDF includes all client profile data and specialized form fields from the backend system.
             </div>
         </div>
     </div>
 </div>
-
-<style>
-    .bg-grid-slate-200 {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(226 232 240 / 0.4)'%3E%3Cpath d='M0 .5H31.5V32'/%3E%3C/svg%3E");
-    }
-    .dark .bg-grid-slate-700\/20 {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(51 65 85 / 0.3)'%3E%3Cpath d='M0 .5H31.5V32'/%3E%3C/svg%3E");
-    }
-</style>

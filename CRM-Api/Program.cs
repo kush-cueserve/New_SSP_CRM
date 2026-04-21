@@ -93,6 +93,9 @@ builder.Services.AddScoped<IUserContext, UserContext>();
 builder.Services.AddScoped<IDynamicFieldService, DynamicFieldService>();
 builder.Services.AddScoped<ICustomerNoteService, CustomerNoteService>();
 builder.Services.AddScoped<ICustomerRelationshipService, CustomerRelationshipService>();
+builder.Services.AddMemoryCache();
+builder.Services.AddScoped<IEncryptionService, EncryptionService>();
+builder.Services.AddScoped<ISmtpConfigurationService, SmtpConfigurationService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Configure OpenAPI and Swagger
