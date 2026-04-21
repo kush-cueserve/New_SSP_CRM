@@ -38,6 +38,7 @@ import { ServicePortfolioComponent } from './services/service-portfolio.componen
 import { SummaryComponent } from './summary/summary.component';
 import { AdminChecklistComponent } from './admin-checklist/admin-checklist.component';
 import { FSNotesComponent } from './fs-notes/fs-notes.component';
+import { FormsGridComponent } from '../../forms/grid/grid.component';
 
 
 @Component({
@@ -71,7 +72,8 @@ import { FSNotesComponent } from './fs-notes/fs-notes.component';
         ServicePortfolioComponent,
         SummaryComponent,
         AdminChecklistComponent,
-        FSNotesComponent
+        FSNotesComponent,
+        FormsGridComponent
     ]
 })
 export class DetailsComponent implements OnInit, OnDestroy {

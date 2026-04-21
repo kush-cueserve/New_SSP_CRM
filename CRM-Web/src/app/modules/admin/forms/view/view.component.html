@@ -3,7 +3,7 @@
     <!-- Header / Toolbar -->
     <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:pt-10 sm:pb-8 sm:px-10 border-b bg-card dark:bg-transparent">
         <div class="flex items-center">
-            <button mat-icon-button [routerLink]="['/forms']" matTooltip="Back to Forms">
+            <button mat-icon-button (click)="goBack()" matTooltip="Back">
                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:arrow-left'"></mat-icon>
             </button>
             <div class="ml-4">
@@ -39,13 +39,17 @@
                         </div>
 
                         <div class="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-                            <button mat-flat-button [color]="'primary'" (click)="download()" [disabled]="isLoading" class="w-full sm:w-auto px-8">
-                                <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_outline:arrow-down-tray'"></mat-icon>
-                                <span>Download PDF</span>
+                            <button mat-flat-button [color]="'primary'" (click)="download()" [disabled]="isLoading" class="w-full sm:w-auto px-8 h-12">
+                                <div class="flex items-center justify-center">
+                                    <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:arrow-down-tray'"></mat-icon>
+                                    <span class="font-semibold">Download PDF</span>
+                                </div>
                             </button>
-                            <button mat-stroked-button (click)="email()" [disabled]="isLoading" class="w-full sm:w-auto px-8">
-                                <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_outline:envelope'"></mat-icon>
-                                <span>Email to Client</span>
+                            <button mat-stroked-button (click)="email()" [disabled]="isLoading" class="w-full sm:w-auto px-8 h-12">
+                                <div class="flex items-center justify-center">
+                                    <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:envelope'"></mat-icon>
+                                    <span class="font-semibold">Email to Client</span>
+                                </div>
                             </button>
                         </div>
                     </div>

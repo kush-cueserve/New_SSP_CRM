@@ -34,8 +34,9 @@ export class FormsService {
     /**
      * Get all forms
      */
-    getForms(): Observable<FormMaster[]> {
-        return this._httpClient.get<FormMaster[]>(this._baseUrl).pipe(
+    getForms(customerId?: number): Observable<FormMaster[]> {
+        const params = customerId ? { customerId: customerId.toString() } : {};
+        return this._httpClient.get<FormMaster[]>(this._baseUrl, { params }).pipe(
             tap((forms) => {
                 this._forms.next(forms);
             })

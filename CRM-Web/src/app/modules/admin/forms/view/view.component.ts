@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, 
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { fuseAnimations } from '@fuse/animations';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -27,6 +27,7 @@ export class FormViewComponent implements OnInit
     private _activatedRoute = inject(ActivatedRoute);
     private _formsService = inject(FormsService);
     private _customerService = inject(CustomerService);
+    private _router = inject(Router);
     private _changeDetectorRef = inject(ChangeDetectorRef);
     private _snackBar = inject(MatSnackBar);
     private _dialog = inject(MatDialog);
@@ -63,6 +64,24 @@ export class FormViewComponent implements OnInit
         else
         {
             this.isLoading = false;
+        }
+    }
+
+    /**
+     * Navigate back to the previous context
+     */
+    goBack(): void
+    {
+        const customerId = this._activatedRoute.snapshot.queryParamMap.get('customerId');
+        const from = this._activatedRoute.snapshot.queryParamMap.get('from');
+
+        if (from === 'customer' && customerId)
+        {
+            this._router.navigate(['/customers', customerId]);
+        }
+        else
+        {
+            this._router.navigate(['/forms']);
         }
     }
 

@@ -12,6 +12,7 @@ namespace CRM_Api.DTOs
         public bool AllowView { get; set; }
         public bool AllowDownload { get; set; }
         public int DisplayOrder { get; set; }
+        public string? VisibleForClientTypes { get; set; }
     }
 
     public class FormPdfResponseDto

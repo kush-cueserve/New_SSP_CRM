@@ -28,5 +28,8 @@ namespace CRM_Api.Models.Entities.Customer
 
         public bool IsActive { get; set; } = true;
         public int DisplayOrder { get; set; } = 0;
+
+        [StringLength(500)]
+        public string? VisibleForClientTypes { get; set; }
     }
 }

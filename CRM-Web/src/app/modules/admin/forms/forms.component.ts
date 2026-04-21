@@ -14,6 +14,8 @@ import { FormContactPickerComponent } from 'app/modules/admin/forms/contact-pick
 import { BehaviorSubject, combineLatest, map, Observable, startWith } from 'rxjs';
 import { Router } from '@angular/router';
 
+import { FormsGridComponent } from './grid/grid.component';
+
 @Component({
     selector       : 'forms-dashboard',
     templateUrl    : './forms.component.html',
@@ -21,89 +23,14 @@ import { Router } from '@angular/router';
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations     : fuseAnimations,
     standalone     : true,
-    imports        : [CommonModule, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatSelectModule, MatTooltipModule, MatDialogModule]
+    imports        : [CommonModule, FormsGridComponent]
 })
-export class FormsComponent implements OnInit
+export class FormsComponent
 {
-    private _formsService = inject(FormsService);
-    private _matDialog = inject(MatDialog);
-    private _router = inject(Router);
-
-    forms$: Observable<FormMaster[]>;
-    categories$: Observable<string[]>;
-    searchInputControl: UntypedFormControl = new UntypedFormControl('');
-    filterCategory$: BehaviorSubject<string> = new BehaviorSubject('all');
-
     /**
-     * On init
+     * Constructor
      */
-    ngOnInit(): void
+    constructor()
     {
-        // Get the forms
-        this._formsService.getForms().subscribe();
-
-        // Setup filter logic
-        this.forms$ = combineLatest([
-            this._formsService.forms$,
-            this.searchInputControl.valueChanges.pipe(startWith('')),
-            this.filterCategory$
-        ]).pipe(
-            map(([forms, query, category]) => {
-                if (!forms) return [];
-
-                return forms.filter(form => {
-                    const matchesQuery = form.name.toLowerCase().includes(query.toLowerCase());
-                    const matchesCategory = category === 'all' || form.category === category;
-                    return matchesQuery && matchesCategory;
-                });
-            })
-        );
-
-        // Get unique categories for the filter
-        this.categories$ = this._formsService.forms$.pipe(
-            map(forms => {
-                if (!forms) return [];
-                const categories = forms.map(f => f.category).filter((c): c is string => !!c);
-                return Array.from(new Set(categories));
-            })
-        );
-    }
-
-    /**
-     * Open contact picker dialog
-     */
-    openContactPicker(form: FormMaster): void
-    {
-        this._matDialog.open(FormContactPickerComponent, {
-            autoFocus: false,
-            width: '520px',
-            panelClass: 'contact-picker-dialog'
-        }).afterClosed().subscribe((result) => {
-            if (!result) return;
-
-            const queryParams: any = {};
-            if (result.contact) {
-                queryParams.customerId = result.contact.id;
-            }
-
-            // Navigate to form preview/generation page
-            this._router.navigate(['/forms/view', form.slug], { queryParams });
-        });
-    }
-
-    /**
-     * Filter by category
-     */
-    filterByCategory(category: string): void
-    {
-        this.filterCategory$.next(category);
-    }
-
-    /**
-     * Track by function for ngFor
-     */
-    trackByFn(index: number, item: any): any
-    {
-        return item.id || index;
     }
 }

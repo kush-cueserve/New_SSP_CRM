@@ -789,6 +789,17 @@
                             <mat-tab label="Relationships">
                                 <customer-relationships [customerId]="customerId"></customer-relationships>
                             </mat-tab>
+
+                            <mat-tab label="Forms" [disabled]="!customerId">
+                                <ng-template mat-tab-label>
+                                    <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_outline:document-duplicate'"></mat-icon>
+                                    Forms
+                                </ng-template>
+                                <div class="p-8">
+                                    <forms-grid [customerId]="customerId" [showFilters]="true"></forms-grid>
+                                </div>
+                            </mat-tab>
+
                             <mat-tab label="Notes" [disabled]="!customerId">
                                 <customer-notes [customerId]="customerId"></customer-notes>
                             </mat-tab>

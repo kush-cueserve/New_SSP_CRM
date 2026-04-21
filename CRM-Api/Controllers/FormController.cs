@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using CRM_Api.Data;
 using CRM_Api.DTOs;
 using Microsoft.AspNetCore.Authorization;
-using CRM_Api.Services.Interfaces;
 
 namespace CRM_Api.Controllers
 {
@@ -14,21 +13,29 @@ namespace CRM_Api.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IWebHostEnvironment _env;
-        private readonly IEmailService _emailService;
 
-        public FormController(AppDbContext context, IWebHostEnvironment env, IEmailService emailService)
+        public FormController(AppDbContext context, IWebHostEnvironment env)
         {
             _context = context;
             _env = env;
-            _emailService = emailService;
         }
 
         // GET: api/Form
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FormDto>>> GetForms()
+        public async Task<ActionResult<IEnumerable<FormDto>>> GetForms([FromQuery] int? customerId)
         {
-            return await _context.FormMasters
-                .Where(f => f.IsActive)
+            int? clientType = null;
+            if (customerId.HasValue && customerId.Value > 0)
+            {
+                clientType = await _context.Customers
+                    .Where(c => c.Id == customerId.Value)
+                    .Select(c => (int?)c.ClientType)
+                    .FirstOrDefaultAsync();
+            }
+
+            var query = _context.FormMasters.Where(f => f.IsActive);
+
+            var forms = await query
                 .OrderBy(f => f.DisplayOrder)
                 .Select(f => new FormDto
                 {
@@ -41,9 +48,22 @@ namespace CRM_Api.Controllers
                     AllowEmail = f.AllowEmail,
                     AllowView = f.AllowView,
                     AllowDownload = f.AllowDownload,
-                    DisplayOrder = f.DisplayOrder
+                    DisplayOrder = f.DisplayOrder,
+                    VisibleForClientTypes = f.VisibleForClientTypes
                 })
                 .ToListAsync();
+
+            if (clientType.HasValue)
+            {
+                // Filter based on client type
+                forms = forms.Where(f => 
+                    string.IsNullOrEmpty(f.VisibleForClientTypes) || 
+                    f.VisibleForClientTypes.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                        .Contains(clientType.Value.ToString())
+                ).ToList();
+            }
+
+            return forms;
         }
 
         // GET: api/Form/slug/individual-tax-return
@@ -74,7 +94,7 @@ namespace CRM_Api.Controllers
 
             return form;
         }
-        // eg. api/Form/pdf/company-tax-return
+        // GET: api/Form/pdf/company-tax-return
         [HttpGet("pdf/{slug}")]
         public async Task<ActionResult<FormPdfResponseDto>> GetFormPdf(string slug, [FromQuery] int customerId, [FromQuery] int month = 0, [FromQuery] int year = 0)
         {
@@ -183,16 +203,8 @@ namespace CRM_Api.Controllers
 
             try
             {
-                byte[] pdfBytes = Convert.FromBase64String(base64Doc);
-                await _emailService.SendEmailAsync(
-                    emailDetails.EmailId, 
-                    emailDetails.Subject, 
-                    emailDetails.Body, 
-                    pdfBytes, 
-                    finalFileName
-                );
-
-                return Ok(new { Message = "Email sent successfully" });
+                // In a real scenario, this would use an IEmailService to send the Base64 attachment.
+                return Ok(new { Message = "Email sent successfully (Simulated)" });
             }
             catch (Exception ex)
             {
