@@ -71,7 +71,7 @@ namespace CRM_Api.Controllers
 
             return form;
         }
-        // GET: api/Form/pdf/company-tax-return
+        // eg. api/Form/pdf/company-tax-return
         [HttpGet("pdf/{slug}")]
         public async Task<ActionResult<FormPdfResponseDto>> GetFormPdf(string slug, [FromQuery] int customerId, [FromQuery] int month = 0, [FromQuery] int year = 0)
         {
@@ -118,7 +118,7 @@ namespace CRM_Api.Controllers
             try
             {
                 var pdfHelper = new Helpers.HtmlToPdfHelper();
-                string base64Pdf = pdfHelper.GenerateHTMLToPDF(htmlContent, _env.ContentRootPath);
+                string base64Pdf = await pdfHelper.GenerateHTMLToPDFAsync(htmlContent, _env.ContentRootPath);
 
                 return Ok(new FormPdfResponseDto
                 {
@@ -174,7 +174,7 @@ namespace CRM_Api.Controllers
                 htmlContent = ReplaceDatePlaceholders(htmlContent);
 
                 var pdfHelper = new Helpers.HtmlToPdfHelper();
-                base64Doc = pdfHelper.GenerateHTMLToPDF(htmlContent, _env.ContentRootPath);
+                base64Doc = await pdfHelper.GenerateHTMLToPDFAsync(htmlContent, _env.ContentRootPath);
                 finalFileName = $"{slug}_{customerId}_{DateTime.Now:yyyyMMdd}.pdf";
             }
 
