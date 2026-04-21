@@ -20,7 +20,7 @@ import { EmailComposeComponent } from 'app/shared/components/email-compose/email
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations   : fuseAnimations,
     standalone   : true,
-    imports      : [CommonModule, FormsModule, MatButtonModule, MatIconModule, MatTooltipModule, RouterLink]
+    imports      : [CommonModule, FormsModule, MatButtonModule, MatIconModule, MatTooltipModule]
 })
 export class FormViewComponent implements OnInit
 {

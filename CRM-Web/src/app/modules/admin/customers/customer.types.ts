@@ -107,6 +107,7 @@ export interface DynamicFieldMaster {
     isActive: boolean;
     sortOrder: number;
     options?: string; // JSON string for dropdown options
+    displayTypeIds?: string; // Comma separated IDs of customer types
 }
 
 export interface DynamicFieldValue {

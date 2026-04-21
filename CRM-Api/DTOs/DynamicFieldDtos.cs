@@ -15,6 +15,7 @@ namespace CRM_Api.DTOs
         public bool IsActive { get; set; }
         public int SortOrder { get; set; }
         public string? Options { get; set; }
+        public string? DisplayTypeIds { get; set; }
     }
 
     public class CreateDynamicFieldMasterDto
@@ -26,6 +27,7 @@ namespace CRM_Api.DTOs
         public string? DefaultValue { get; set; }
         public string? Category { get; set; }
         public string? Options { get; set; }
+        public string? DisplayTypeIds { get; set; }
     }
 
     public class DynamicFieldValueDto

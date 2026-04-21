@@ -8,6 +8,8 @@ import {
     horizontalNavigation,
 } from 'app/mock-api/common/navigation/data';
 import { cloneDeep } from 'lodash-es';
+import { UserService } from 'app/core/user/user.service';
+import { User } from 'app/core/user/user.types';
 
 @Injectable({ providedIn: 'root' })
 export class NavigationMockApi {
@@ -20,10 +22,20 @@ export class NavigationMockApi {
     private readonly _horizontalNavigation: FuseNavigationItem[] =
         horizontalNavigation;
 
+    private _currentUser: User | null = null;
+
     /**
      * Constructor
      */
-    constructor(private _fuseMockApiService: FuseMockApiService) {
+    constructor(
+        private _fuseMockApiService: FuseMockApiService,
+        private _userService: UserService
+    ) {
+        // Subscribe to user changes
+        this._userService.user$.subscribe((user) => {
+            this._currentUser = user;
+        });
+
         // Register Mock API handlers
         this.registerHandlers();
     }
@@ -77,12 +89,16 @@ export class NavigationMockApi {
             return [
                 200,
                 {
-                    compact: cloneDeep(this._compactNavigation),
-                    default: cloneDeep(this._defaultNavigation),
-                    futuristic: cloneDeep(this._futuristicNavigation),
-                    horizontal: cloneDeep(this._horizontalNavigation),
+                    compact: cloneDeep(this._compactNavigation).filter(nav => this._isNavAllowed(nav)),
+                    default: cloneDeep(this._defaultNavigation).filter(nav => this._isNavAllowed(nav)),
+                    futuristic: cloneDeep(this._futuristicNavigation).filter(nav => this._isNavAllowed(nav)),
+                    horizontal: cloneDeep(this._horizontalNavigation).filter(nav => this._isNavAllowed(nav)),
                 },
             ];
         });
+    }
+
+    private _isNavAllowed(navItem: FuseNavigationItem): boolean {
+        return true;
     }
 }

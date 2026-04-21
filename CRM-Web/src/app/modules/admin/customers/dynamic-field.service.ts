@@ -29,4 +29,25 @@ export class DynamicFieldService {
     upsertValues(customerId: number, values: UpsertDynamicFieldValue[]): Observable<any> {
         return this._httpClient.post(`${this._baseApiUrl}/api/DynamicFieldValues/${customerId}`, values);
     }
+
+    /**
+     * Add a new dynamic field master
+     */
+    addMaster(master: Partial<DynamicFieldMaster>): Observable<DynamicFieldMaster> {
+        return this._httpClient.post<DynamicFieldMaster>(`${this._baseApiUrl}/api/DynamicFieldMasters`, master);
+    }
+
+    /**
+     * Update an existing dynamic field master
+     */
+    updateMaster(id: number, master: Partial<DynamicFieldMaster>): Observable<any> {
+        return this._httpClient.put(`${this._baseApiUrl}/api/DynamicFieldMasters/${id}`, master);
+    }
+
+    /**
+     * Delete a dynamic field master
+     */
+    deleteMaster(id: number): Observable<any> {
+        return this._httpClient.delete(`${this._baseApiUrl}/api/DynamicFieldMasters/${id}`);
+    }
 }

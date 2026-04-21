@@ -762,7 +762,7 @@
                              </mat-tab>
                             
                             <mat-tab label="Dynamic Details">
-                                <dynamic-fields [customerId]="customerId"></dynamic-fields>
+                                <dynamic-fields [customerId]="customerId" [customerTypeId]="customerForm.get('clientType').value"></dynamic-fields>
                             </mat-tab>
                             
                             <mat-tab *ngIf="showAdminTab()" label="Admin" [disabled]="!customerId">

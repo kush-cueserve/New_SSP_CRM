@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CRM_Api.Controllers
 {
-    [Authorize(Roles = "Admin, SuperAdmin")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class SmtpSettingsController : ControllerBase
@@ -46,6 +46,7 @@ namespace CRM_Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, SuperAdmin")]
         public async Task<ActionResult<SmtpSetting>> Save([FromBody] SmtpSetting settings)
         {
             if (!ModelState.IsValid)

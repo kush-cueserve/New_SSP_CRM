@@ -35,7 +35,8 @@ namespace CRM_Api.Services
                     Category = m.Category,
                     IsActive = m.IsActive,
                     SortOrder = m.SortOrder,
-                    Options = m.Options
+                    Options = m.Options,
+                    DisplayTypeIds = m.DisplayTypeIds
                 })
                 .ToListAsync();
         }
@@ -50,7 +51,8 @@ namespace CRM_Api.Services
                 FieldAbbreviation = dto.FieldAbbreviation,
                 DefaultValue = dto.DefaultValue,
                 Category = dto.Category,
-                Options = dto.Options
+                Options = dto.Options,
+                DisplayTypeIds = dto.DisplayTypeIds
             };
 
             _context.DynamicFieldMasters.Add(master);
@@ -67,7 +69,8 @@ namespace CRM_Api.Services
                 Category = master.Category,
                 IsActive = master.IsActive,
                 SortOrder = master.SortOrder,
-                Options = master.Options
+                Options = master.Options,
+                DisplayTypeIds = master.DisplayTypeIds
             };
         }
 
@@ -83,6 +86,7 @@ namespace CRM_Api.Services
             master.DefaultValue = dto.DefaultValue;
             master.Category = dto.Category;
             master.Options = dto.Options;
+            master.DisplayTypeIds = dto.DisplayTypeIds;
 
             await _context.SaveChangesAsync();
             return true;

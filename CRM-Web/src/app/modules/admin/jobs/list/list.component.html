@@ -7,9 +7,17 @@
 
             <!-- Header (Hidden in dashboard mode) -->
             <div *ngIf="!dashboardMode"
-                class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-8 px-6 md:px-8 border-b">
-                <!-- Title -->
-                <div class="text-4xl font-extrabold tracking-tight">Jobs Dashboard</div>
+                class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-8 px-6 md:px-8 border-b bg-card dark:bg-transparent">
+                <div class="flex flex-col">
+                    <!-- Breadcrumbs -->
+                    <div class="flex items-center text-sm font-medium text-secondary whitespace-nowrap">
+                        <a class="text-primary cursor-pointer hover:underline" [routerLink]="['/dashboard']">Home</a>
+                        <mat-icon class="icon-size-4 mx-1" [svgIcon]="'heroicons_mini:chevron-right'"></mat-icon>
+                        <span>Jobs Portfolio</span>
+                    </div>
+                    <!-- Title -->
+                    <div class="mt-2 text-4xl font-extrabold tracking-tight leading-none text-slate-900 dark:text-white">Jobs Dashboard</div>
+                </div>
                 <!-- Search + Export (aligned right) -->
                 <div class="flex items-center mt-6 sm:mt-0 sm:ml-4 gap-3">
                     <!-- Search -->

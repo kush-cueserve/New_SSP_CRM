@@ -33,9 +33,24 @@ export const defaultNavigation: FuseNavigationItem[] = [
     {
         id   : 'settings',
         title: 'Settings',
-        type : 'basic',
-        icon : 'heroicons_outline:cog',
-        link : '/settings'
+        type : 'collapsable',
+        icon : 'heroicons_outline:cog-6-tooth',
+        children: [
+            {
+                id   : 'settings.email',
+                title: 'Email Configuration',
+                type : 'basic',
+                icon : 'heroicons_outline:envelope',
+                link : '/settings/email'
+            },
+            {
+                id   : 'settings.dynamic-fields',
+                title: 'Dynamic Fields',
+                type : 'basic',
+                icon : 'heroicons_outline:adjustments-horizontal',
+                link : '/settings/dynamic-fields'
+            }
+        ]
     }
 ];
 export const compactNavigation: FuseNavigationItem[] = [

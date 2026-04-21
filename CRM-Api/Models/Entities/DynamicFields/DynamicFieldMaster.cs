@@ -33,6 +33,8 @@ namespace CRM_Api.Models.Entities.DynamicFields
 
         public int SortOrder { get; set; } = 0;
 
-        public string? Options { get; set; } // JSON string for dropdown options
+        public string? Options { get; set; }
+        
+        public string? DisplayTypeIds { get; set; } // Comma separated IDs of customer types
     }
 }

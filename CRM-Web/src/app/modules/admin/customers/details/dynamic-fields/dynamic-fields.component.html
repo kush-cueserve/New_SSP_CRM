@@ -16,38 +16,52 @@
     </div>
 
     <!-- Form -->
-    <form *ngIf="!isLoading" [formGroup]="dynamicForm" class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
+    <!-- Form Content Grouped by Category -->
+    <form *ngIf="!isLoading && categories.length > 0" [formGroup]="dynamicForm" class="mt-8 space-y-12">
         
-        <ng-container *ngFor="let field of fields">
-            
-            <!-- Boolean / Checkbox -->
-            <div *ngIf="field.fieldType === 'boolean'" class="flex items-center h-full pt-4">
-                <mat-checkbox [formControlName]="field.id.toString()" [color]="'primary'">
-                    {{field.displayName}}
-                </mat-checkbox>
+        <div *ngFor="let category of categories" class="flex flex-col">
+            <!-- Category Header -->
+            <div *ngIf="category.name" class="flex items-center mb-6">
+                <div class="text-lg font-semibold text-primary mr-4 whitespace-nowrap">{{category.name}}</div>
+                <div class="h-px bg-gray-200 dark:bg-gray-700 w-full"></div>
             </div>
 
-            <!-- Dropdown -->
-            <mat-form-field *ngIf="field.fieldType === 'dropdown'" class="fuse-mat-dense">
-                <mat-label>{{field.displayName}}</mat-label>
-                <mat-select [formControlName]="field.id.toString()">
-                    <mat-option *ngFor="let opt of parseOptions(field.options)" [value]="opt">{{opt}}</mat-option>
-                </mat-select>
-            </mat-form-field>
+            <!-- Fields Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-6">
+                <ng-container *ngFor="let field of category.fields">
+                    
+                    <!-- Boolean / Checkbox -->
+                    <div *ngIf="field.fieldType === 'boolean'" class="flex items-center min-h-[52px]">
+                        <mat-checkbox [formControlName]="field.id.toString()" [color]="'primary'" class="font-medium text-secondary">
+                            {{field.displayName}}
+                        </mat-checkbox>
+                    </div>
 
-            <!-- Textarea -->
-            <mat-form-field *ngIf="field.fieldType === 'textarea'" class="fuse-mat-dense sm:col-span-2 lg:col-span-3">
-                <mat-label>{{field.displayName}}</mat-label>
-                <textarea matInput [formControlName]="field.id.toString()" [rows]="3"></textarea>
-            </mat-form-field>
+                    <!-- Dropdown -->
+                    <mat-form-field *ngIf="field.fieldType === 'dropdown'" class="w-full" [subscriptSizing]="'dynamic'">
+                        <mat-label>{{field.displayName}}</mat-label>
+                        <mat-select [formControlName]="field.id.toString()">
+                            <mat-option [value]="null">-- Select --</mat-option>
+                            <mat-option *ngFor="let opt of parseOptions(field.options)" [value]="opt">{{opt}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
 
-            <!-- Default / String -->
-            <mat-form-field *ngIf="field.fieldType !== 'boolean' && field.fieldType !== 'dropdown' && field.fieldType !== 'textarea'" class="fuse-mat-dense">
-                <mat-label>{{field.displayName}}</mat-label>
-                <input matInput [formControlName]="field.id.toString()">
-            </mat-form-field>
+                    <!-- Textarea -->
+                    <mat-form-field *ngIf="field.fieldType === 'textarea'" class="w-full md:col-span-2 lg:col-span-3" [subscriptSizing]="'dynamic'">
+                        <mat-label>{{field.displayName}}</mat-label>
+                        <textarea matInput [formControlName]="field.id.toString()" [rows]="3" placeholder="Enter details..."></textarea>
+                    </mat-form-field>
 
-        </ng-container>
+                    <!-- Default / String / Number -->
+                    <mat-form-field *ngIf="field.fieldType !== 'boolean' && field.fieldType !== 'dropdown' && field.fieldType !== 'textarea'" 
+                                    class="w-full" [subscriptSizing]="'dynamic'">
+                        <mat-label>{{field.displayName}}</mat-label>
+                        <input matInput [formControlName]="field.id.toString()" [type]="field.fieldType === 'number' ? 'number' : 'text'">
+                    </mat-form-field>
+
+                </ng-container>
+            </div>
+        </div>
 
     </form>
 

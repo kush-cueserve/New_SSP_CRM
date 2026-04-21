@@ -19,3 +19,15 @@
     padding: 0 !important;
     max-height: unset !important;
 }
+
+/* Dynamic Field Dialog - remove scrollbar */
+.dynamic-field-dialog-panel .mat-mdc-dialog-container .mdc-dialog__surface {
+    overflow: hidden !important;
+    padding: 0 !important;
+}
+
+.dynamic-field-dialog-panel .mat-mdc-dialog-container .mdc-dialog__content {
+    padding: 0 !important;
+    max-height: unset !important;
+    overflow: hidden !important;
+}

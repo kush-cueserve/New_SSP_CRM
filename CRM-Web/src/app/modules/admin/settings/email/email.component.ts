@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule, MatChipInputEvent } from '@angular/material/chips';
@@ -11,6 +12,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { EmailSettingsService } from './email.service';
 import { finalize } from 'rxjs';
+
+import { UserService } from 'app/core/user/user.service';
 
 @Component({
     selector: 'email-settings',
@@ -27,18 +30,21 @@ import { finalize } from 'rxjs';
         MatIconModule,
         MatInputModule,
         MatSnackBarModule,
-        MatTooltipModule
+        MatTooltipModule,
+        RouterLink
     ]
 })
 export class EmailSettingsComponent implements OnInit {
     private _fb = inject(FormBuilder);
     private _smtpService = inject(EmailSettingsService);
     private _snackBar = inject(MatSnackBar);
+    private _userService = inject(UserService);
 
     settingsForm: FormGroup;
     isLoading = false;
     isSaving = false;
     hidePassword = true;
+    isReadOnly = false;
     
     // Chips configuration
     readonly separatorKeysCodes = [ENTER, COMMA] as const;
@@ -55,6 +61,10 @@ export class EmailSettingsComponent implements OnInit {
             fromEmail: ['', [Validators.required, Validators.email]],
             fromName: ['', Validators.required],
             isActive: [true]
+        });
+
+        this._userService.user$.subscribe(user => {
+            this.isReadOnly = !(user?.isAdmin || user?.isSuperAdmin);
         });
 
         this.loadSettings();

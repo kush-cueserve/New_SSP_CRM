@@ -10,5 +10,9 @@ export default [
     {
         path: 'email',
         component: EmailSettingsComponent
+    },
+    {
+        path: 'dynamic-fields',
+        loadComponent: () => import('./dynamic-fields/dynamic-fields.component').then(m => m.DynamicFieldsAdminComponent)
     }
 ] as Routes;

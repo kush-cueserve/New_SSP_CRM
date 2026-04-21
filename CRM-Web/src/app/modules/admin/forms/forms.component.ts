@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -23,7 +24,7 @@ import { FormsGridComponent } from './grid/grid.component';
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations     : fuseAnimations,
     standalone     : true,
-    imports        : [CommonModule, FormsGridComponent]
+    imports        : [CommonModule, FormsGridComponent, MatIconModule, RouterLink]
 })
 export class FormsComponent
 {
