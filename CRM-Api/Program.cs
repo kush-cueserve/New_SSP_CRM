@@ -93,6 +93,7 @@ builder.Services.AddScoped<IUserContext, UserContext>();
 builder.Services.AddScoped<IDynamicFieldService, DynamicFieldService>();
 builder.Services.AddScoped<ICustomerNoteService, CustomerNoteService>();
 builder.Services.AddScoped<ICustomerRelationshipService, CustomerRelationshipService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Configure OpenAPI and Swagger
 builder.Services.AddOpenApi();

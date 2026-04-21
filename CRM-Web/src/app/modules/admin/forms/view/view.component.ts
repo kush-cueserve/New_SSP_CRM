@@ -10,6 +10,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsService, FormMaster } from 'app/modules/admin/forms/forms.service';
 import { CustomerService } from 'app/modules/admin/customers/customer.service';
 import { Subject, takeUntil } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { EmailComposeComponent } from 'app/shared/components/email-compose/email-compose.component';
 
 @Component({
     selector     : 'form-view',
@@ -27,6 +29,7 @@ export class FormViewComponent implements OnInit
     private _customerService = inject(CustomerService);
     private _changeDetectorRef = inject(ChangeDetectorRef);
     private _snackBar = inject(MatSnackBar);
+    private _dialog = inject(MatDialog);
 
     form: FormMaster;
     customerData: any;
@@ -107,27 +110,47 @@ export class FormViewComponent implements OnInit
     {
         if (!this.form) return;
 
-        this.isLoading = true;
-        this._changeDetectorRef.markForCheck();
-
         const customerId = this.customerData ? this.customerData.id : 0;
+        
+        // Define default body and subject
+        const defaultSubject = `Form: ${this.form.name}`;
+        const defaultBody = `<p>Dear ${this.customerData?.name || 'Client'},</p><p>Please find the attached ${this.form.name}.</p><br/><p>Thank you,</p><p>SSP CRM Team</p>`;
+        const attachmentName = `${this.form.slug}_${customerId || 'blank'}.pdf`;
 
-        const emailDetails = {
-            emailId: this.customerData?.email || '',
-            subject: `Form: ${this.form.name}`,
-            body: `Dear ${this.customerData?.name || 'Client'},\n\nPlease find the attached ${this.form.name}.\n\nThank you.`
-        };
-
-        this._formsService.sendFormEmail(this.form.slug, customerId, emailDetails).subscribe({
-            next: (response) => {
-                this.isLoading = false;
-                this._snackBar.open('Email sent successfully', 'OK', { duration: 3000 });
-                this._changeDetectorRef.markForCheck();
+        // Open Dialog
+        const dialogRef = this._dialog.open(EmailComposeComponent, {
+            data: {
+                toEmail: this.customerData?.contactInfo?.email || this.customerData?.email || '',
+                subject: defaultSubject,
+                body: defaultBody,
+                attachmentName: attachmentName
             },
-            error: () => {
-                this.isLoading = false;
-                this._snackBar.open('Error sending email', 'Error', { duration: 5000 });
+            panelClass: 'email-compose-dialog-panel'
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                this.isLoading = true;
                 this._changeDetectorRef.markForCheck();
+
+                const emailDetails = {
+                    emailId: result.to,
+                    subject: result.subject,
+                    body: result.body
+                };
+
+                this._formsService.sendFormEmail(this.form.slug, customerId, emailDetails).subscribe({
+                    next: (response) => {
+                        this.isLoading = false;
+                        this._snackBar.open('Email sent successfully', 'OK', { duration: 3000 });
+                        this._changeDetectorRef.markForCheck();
+                    },
+                    error: () => {
+                        this.isLoading = false;
+                        this._snackBar.open('Error sending email', 'Error', { duration: 5000 });
+                        this._changeDetectorRef.markForCheck();
+                    }
+                });
             }
         });
     }
