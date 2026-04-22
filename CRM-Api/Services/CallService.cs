@@ -14,11 +14,13 @@ namespace CRM_Api.Services
     {
         private readonly AppDbContext _context;
         private readonly IUserContext _userContext;
+        private readonly IEmailService _emailService;
 
-        public CallService(AppDbContext context, IUserContext userContext)
+        public CallService(AppDbContext context, IUserContext userContext, IEmailService emailService)
         {
             _context = context;
             _userContext = userContext;
+            _emailService = emailService;
         }
 
         public async Task<CallLogPagedResponseDto> GetCallsAsync(CallLogFilterDto filter)
@@ -161,6 +163,12 @@ namespace CRM_Api.Services
             _context.CallLogs.Add(callLog);
             await _context.SaveChangesAsync();
 
+            // Send notification to the "For Whom" staff member
+            if (callLog.ForWhom.HasValue)
+            {
+                await SendCallNotificationEmailAsync(callLog.ForWhom.Value, callLog);
+            }
+
             return await GetCallByIdAsync(callLog.Id);
         }
 
@@ -168,6 +176,8 @@ namespace CRM_Api.Services
         {
             var callLog = await _context.CallLogs.FindAsync(id);
             if (callLog == null) return null;
+
+            var oldForWhom = callLog.ForWhom;
 
             callLog.ReceiveDate = createDto.ReceiveDate;
             callLog.Receiver = createDto.ReceiverId;
@@ -190,7 +200,67 @@ namespace CRM_Api.Services
 
             await _context.SaveChangesAsync();
 
+            // Send notification if ForWhom changed or was newly set
+            if (callLog.ForWhom.HasValue && callLog.ForWhom != oldForWhom)
+            {
+                await SendCallNotificationEmailAsync(callLog.ForWhom.Value, callLog);
+            }
+
             return await GetCallByIdAsync(callLog.Id);
+        }
+
+        private async Task SendCallNotificationEmailAsync(int userId, CallLogs callLog)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null || string.IsNullOrEmpty(user.Email)) return;
+
+            var receiverName = await _context.Users
+                .Where(u => u.Id == callLog.Receiver)
+                .Select(u => u.FirstName + " " + u.LastName)
+                .FirstOrDefaultAsync() ?? "Unknown";
+
+            var purposeName = await _context.Purposes
+                .Where(p => p.ID == callLog.Purpose)
+                .Select(p => p.PurposeName)
+                .FirstOrDefaultAsync() ?? "Other";
+
+            string subject = $"[Call Alert] New Call Logged for You: {callLog.Name}";
+            string body = $@"
+                <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;'>
+                    <h2 style='color: #2196F3; margin-top: 0;'>New Call Log Assigned</h2>
+                    <p>Hello <strong>{user.FirstName}</strong>,</p>
+                    <p>A new call has been logged and assigned to you in the CRM.</p>
+                    
+                    <div style='background-color: #f5f5f5; padding: 15px; border-radius: 4px; margin: 20px 0;'>
+                        <table style='width: 100%; border-collapse: collapse;'>
+                            <tr><td style='padding: 5px 0; color: #666;'><strong>Caller Name:</strong></td><td>{callLog.Name}</td></tr>
+                            <tr><td style='padding: 5px 0; color: #666;'><strong>Company:</strong></td><td>{callLog.CompanyName ?? "N/A"}</td></tr>
+                            <tr><td style='padding: 5px 0; color: #666;'><strong>Contact:</strong></td><td>{callLog.MobileNo}</td></tr>
+                            <tr><td style='padding: 5px 0; color: #666;'><strong>Purpose:</strong></td><td>{purposeName}</td></tr>
+                            <tr><td style='padding: 5px 0; color: #666;'><strong>Taken By:</strong></td><td>{receiverName}</td></tr>
+                            <tr><td style='padding: 5px 0; color: #666;'><strong>Date:</strong></td><td>{callLog.ReceiveDate:dd MMM yyyy HH:mm}</td></tr>
+                        </table>
+                    </div>
+
+                    <p><strong>Remarks:</strong><br/>{callLog.Remark ?? "No remarks provided."}</p>
+
+                    <div style='text-align: center; margin-top: 30px;'>
+                        <a href='http://localhost:4200/calls' style='background-color: #2196F3; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;'>View in CRM</a>
+                    </div>
+                    
+                    <p style='font-size: 12px; color: #999; margin-top: 40px; border-top: 1px solid #eee; padding-top: 10px;'>
+                        This is an automated notification from SSP CRM. Please do not reply to this email.
+                    </p>
+                </div>";
+
+            try
+            {
+                await _emailService.SendEmailAsync(user.Email, subject, body, "Call Tracker Notification");
+            }
+            catch
+            {
+                // Log error or ignore if email fails to prevent breaking the main flow
+            }
         }
 
         public async Task<bool> UpdateStatusAsync(int id, int statusId)
