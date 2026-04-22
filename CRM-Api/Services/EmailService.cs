@@ -14,13 +14,16 @@ namespace CRM_Api.Services
         private readonly ISmtpConfigurationService _smtpConfigService;
         private readonly ILogger<EmailService> _logger;
 
-        public EmailService(ISmtpConfigurationService smtpConfigService, ILogger<EmailService> logger)
+        private readonly IWebHostEnvironment _env;
+
+        public EmailService(ISmtpConfigurationService smtpConfigService, ILogger<EmailService> logger, IWebHostEnvironment env)
         {
             _smtpConfigService = smtpConfigService;
             _logger = logger;
+            _env = env;
         }
 
-        public async Task SendEmailAsync(string to, string subject, string body, byte[]? attachment = null, string? attachmentFileName = null)
+        public async Task SendEmailAsync(string to, string subject, string body, string? title = null, byte[]? attachment = null, string? attachmentFileName = null)
         {
             // 1. Get configuration from the Database
             var dbConfig = await _smtpConfigService.GetActiveConfigurationAsync();
@@ -63,41 +66,26 @@ namespace CRM_Api.Services
 
             email.Subject = subject;
 
-            var builder = new BodyBuilder();
-            
-            string styledHtmlBody = $@"
-            <html>
-            <body style='font-family: ""Helvetica Neue"", Helvetica, Arial, sans-serif; background-color: #f4f5f7; margin: 0; padding: 0;'>
-                <table width='100%' cellpadding='0' cellspacing='0' border='0' style='background-color: #f4f5f7; padding: 40px 20px;'>
-                    <tr>
-                        <td align='center'>
-                            <table width='600' cellpadding='0' cellspacing='0' border='0' style='background-color: #ffffff; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); overflow: hidden;'>
-                                <!-- Header with Logo -->
-                                <tr>
-                                    <td align='center' style='padding: 30px 20px; background-color: #ffffff; border-bottom: 4px solid #0d9488;'>
-                                        <img src='http://supersmartplans.com/wp-content/uploads/email/SSPLogo.jpg' alt='SuperSmartPlans' style='max-width: 250px; height: auto; display: block;' />
-                                    </td>
-                                </tr>
-                                <!-- Body Content -->
-                                <tr>
-                                    <td style='padding: 40px 30px; font-size: 16px; line-height: 1.6; color: #374151;'>
-                                        {body}
-                                    </td>
-                                </tr>
-                                <!-- Footer -->
-                                <tr>
-                                    <td align='center' style='padding: 20px 30px; font-size: 13px; color: #6b7280; background-color: #f9fafb; border-top: 1px solid #e5e7eb;'>
-                                        &copy; {DateTime.Now.Year} SuperSmartPlans Financial & Accounting.<br/>
-                                        This is an automated message from the SSP CRM system.
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </body>
-            </html>";
+            // 2. Load Master Template and replace placeholders
+            string templatePath = Path.Combine(_env.ContentRootPath, "Templates", "MasterEmailTemplate.html");
+            string styledHtmlBody;
 
+            if (File.Exists(templatePath))
+            {
+                string masterTemplate = await File.ReadAllTextAsync(templatePath);
+                styledHtmlBody = masterTemplate
+                    .Replace("{{Title}}", title ?? subject)
+                    .Replace("{{Content}}", body)
+                    .Replace("{{Year}}", DateTime.Now.Year.ToString());
+            }
+            else
+            {
+                // Fallback if file is missing
+                styledHtmlBody = body;
+                _logger.LogWarning("Master Email Template not found at {Path}. Sending raw body.", templatePath);
+            }
+
+            var builder = new BodyBuilder();
             builder.HtmlBody = styledHtmlBody;
 
             if (attachment != null && attachment.Length > 0)

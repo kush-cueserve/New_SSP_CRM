@@ -23,11 +23,13 @@ namespace CRM_Api.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IUserContext _userContext;
+        private readonly IJobNotificationService _notificationService;
 
-        public JobsController(AppDbContext context, IUserContext userContext)
+        public JobsController(AppDbContext context, IUserContext userContext, IJobNotificationService notificationService)
         {
             _context = context;
             _userContext = userContext;
+            _notificationService = notificationService;
         }
 
         private int? GetCurrentUserId()
@@ -209,6 +211,13 @@ namespace CRM_Api.Controllers
             }
 
             await _context.SaveChangesAsync();
+
+            // Trigger notifications
+            foreach (var job in jobs)
+            {
+                await _notificationService.NotifyStatusChangeAsync(job.Id, 0, request.StatusId);
+            }
+
             return Ok(new { Count = jobs.Count });
         }
 
@@ -239,6 +248,12 @@ namespace CRM_Api.Controllers
             }
 
             await _context.SaveChangesAsync();
+            
+            // Trigger notifications
+            foreach (var job in jobs)
+            {
+                await _notificationService.NotifyTemporaryAssignmentAsync(job.Id, request.StaffId, request.UntilDate, request.Note);
+            }
             return Ok(new { Count = jobs.Count });
         }
 
@@ -567,6 +582,9 @@ namespace CRM_Api.Controllers
             });
             await _context.SaveChangesAsync();
 
+            // Trigger Assignment Notification
+            await _notificationService.NotifyAssignmentAsync(job.Id);
+
             return await GetJob(job.Id);
         }
 
@@ -652,7 +670,26 @@ namespace CRM_Api.Controllers
                 });
             }
 
+            // Capture old values for notification logic before saving changes
+            int previousStatusId = job.CurrentStage ?? 1; // Default to 1 (Pending) if null
+            int? previousResponsibleId = job.ResponsibleId;
+
+            // Trigger Notifications after saving
+            int currentStatusId = dto.CurrentStage ?? previousStatusId;
+            bool statusChanged = job.CurrentStage != currentStatusId;
+            bool assignedChanged = job.ResponsibleId != dto.ResponsibleId;
+
             await _context.SaveChangesAsync();
+
+            if (statusChanged)
+            {
+                await _notificationService.NotifyStatusChangeAsync(job.Id, previousStatusId, currentStatusId);
+            }
+            if (assignedChanged)
+            {
+                await _notificationService.NotifyAssignmentAsync(job.Id, previousResponsibleId);
+            }
+
             return NoContent();
         }
 
@@ -719,6 +756,9 @@ namespace CRM_Api.Controllers
 
             _context.JobComments.Add(comment);
             await _context.SaveChangesAsync();
+
+            // Trigger Comment Notification
+            await _notificationService.NotifyCommentAsync(id, comment.Id);
 
             // Look up user name
             var userName = await _context.Users
@@ -799,6 +839,12 @@ namespace CRM_Api.Controllers
                 return Forbid("Only Admins or the Job Owner can archive this job.");
             }
 
+            // Capture info before archiving for notification
+            int jobId = job.Id;
+
+            // Trigger "Job Archived" notification
+            await _notificationService.NotifyStatusChangeAsync(jobId, job.CurrentStage ?? 0, 99);
+
             job.IsActive = false;
             job.UpdateUserId = currentUserId;
             job.UpdateDateTime = DateTime.Now;
@@ -847,6 +893,14 @@ namespace CRM_Api.Controllers
             }
 
             await _context.SaveChangesAsync();
+
+            // Trigger notifications for each archived job
+            foreach (var job in jobs)
+            {
+                if (!isAdmin && job.OwnerId != currentUserId) continue; // Safety check
+                await _notificationService.NotifyStatusChangeAsync(job.Id, 0, 99);
+            }
+
             return Ok(new { success = true, count = archivedCount });
         }
     }

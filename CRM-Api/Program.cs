@@ -44,6 +44,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Register background workers
 builder.Services.AddHostedService<TemporaryAssignmentRevertWorker>();
 builder.Services.AddHostedService<JobRecurringWorker>();
+builder.Services.AddHostedService<AdminReminderWorker>();
 
 // Configure Identity
 builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
@@ -97,6 +98,10 @@ builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IEncryptionService, EncryptionService>();
 builder.Services.AddScoped<ISmtpConfigurationService, SmtpConfigurationService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IAdminReminderService, AdminReminderService>();
+builder.Services.AddScoped<IStaffReminderService, StaffReminderService>();
+builder.Services.AddScoped<IJobNotificationService, JobNotificationService>();
+
 
 // Configure OpenAPI and Swagger
 builder.Services.AddOpenApi();
