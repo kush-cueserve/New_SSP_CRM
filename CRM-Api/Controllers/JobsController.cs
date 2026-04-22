@@ -62,8 +62,8 @@ namespace CRM_Api.Controllers
             }
             else 
             {
-                // Default: Hide "Todo Later" (ID 4) and "Completed" (ID 6)
-                query = query.Where(j => j.CurrentStage != 4 && j.CurrentStage != 6);
+                // Default: Hide "Todo Later" (ID 10) and "Completed" (ID 12)
+                query = query.Where(j => j.CurrentStage != 10 && j.CurrentStage != 12);
             }
             if (filter.Priority.HasValue) query = query.Where(j => j.Priority == filter.Priority);
             if (filter.JobTypeId.HasValue) query = query.Where(j => j.JobTypeId == filter.JobTypeId);
@@ -72,11 +72,20 @@ namespace CRM_Api.Controllers
             if (filter.CreatedUserId.HasValue) query = query.Where(j => j.CreatedUserId == filter.CreatedUserId);
             if (filter.CustomerId.HasValue) query = query.Where(j => j.CustomerId == filter.CustomerId);
             
-            // Default to only showing Active jobs unless specifically requested
+            // Default to only showing Active jobs unless specifically requested or filtering by a final status
             if (filter.IsActive.HasValue) 
+            {
                 query = query.Where(j => j.IsActive == filter.IsActive.Value);
+            }
+            else if (filter.StatusId == 12 || filter.StatusId == 10)
+            {
+                // If explicitly looking for Completed or Todo Later, include them regardless of default active filter
+                query = query.Where(j => j.IsActive || !j.IsActive); 
+            }
             else
+            {
                 query = query.Where(j => j.IsActive);
+            }
                 
             if (filter.IsRecurring.HasValue) query = query.Where(j => j.IsRecurring == filter.IsRecurring);
             if (filter.IsInternal.HasValue) query = query.Where(j => j.IsInternal == filter.IsInternal);
@@ -159,16 +168,16 @@ namespace CRM_Api.Controllers
 
             var stats = new JobStatisticsDto
             {
-                TotalActive = await query.CountAsync(j => j.CurrentStage != 4 && j.CurrentStage != 6),
+                TotalActive = await query.CountAsync(j => j.CurrentStage != 10 && j.CurrentStage != 12),
                 Active = await query.CountAsync(j => j.CurrentStage == 2 || j.CurrentStage == 5),
-                OnHold = await query.CountAsync(j => j.CurrentStage == 3),
-                Overdue = await query.CountAsync(j => j.Deadline != null && j.Deadline < now && j.CurrentStage != 6),
-                CreatedByMe = await _context.Jobs.CountAsync(j => j.IsActive && j.CreatedUserId == currentUserId && j.CurrentStage != 6),
-                OwnedByMe = await _context.Jobs.CountAsync(j => j.IsActive && j.OwnerId == currentUserId && j.CurrentStage != 6),
-                HighPriority = await query.CountAsync(j => j.Priority >= 2 && j.CurrentStage != 6),
+                OnHold = await query.CountAsync(j => j.CurrentStage == 9),
+                Overdue = await query.CountAsync(j => j.Deadline != null && j.Deadline < now && j.CurrentStage != 12),
+                CreatedByMe = await _context.Jobs.CountAsync(j => j.IsActive && j.CreatedUserId == currentUserId && j.CurrentStage != 12),
+                OwnedByMe = await _context.Jobs.CountAsync(j => j.IsActive && j.OwnerId == currentUserId && j.CurrentStage != 12),
+                HighPriority = await query.CountAsync(j => j.Priority >= 2 && j.CurrentStage != 12),
                 TemporaryTasks = await query.CountAsync(j => j.TemporaryAssignmentUntil != null && j.TemporaryAssignmentUntil > now),
-                TodoLater = await query.CountAsync(j => j.CurrentStage == 4),
-                Completed = await query.CountAsync(j => j.CurrentStage == 6)
+                TodoLater = await query.CountAsync(j => j.CurrentStage == 10),
+                Completed = await query.CountAsync(j => j.CurrentStage == 12)
             };
 
             // Aggregations for Charts
@@ -596,6 +605,10 @@ namespace CRM_Api.Controllers
 
             var changes = new List<string>();
 
+            // Capture old values for notification logic
+            int previousStatusId = job.CurrentStage ?? 1;
+            int? previousResponsibleId = job.ResponsibleId;
+
             if (job.CurrentStage != dto.CurrentStage)
             {
                 var oldStatus = await _context.JobStatusMasters.FindAsync(job.CurrentStage);
@@ -670,14 +683,10 @@ namespace CRM_Api.Controllers
                 });
             }
 
-            // Capture old values for notification logic before saving changes
-            int previousStatusId = job.CurrentStage ?? 1; // Default to 1 (Pending) if null
-            int? previousResponsibleId = job.ResponsibleId;
-
             // Trigger Notifications after saving
-            int currentStatusId = dto.CurrentStage ?? previousStatusId;
-            bool statusChanged = job.CurrentStage != currentStatusId;
-            bool assignedChanged = job.ResponsibleId != dto.ResponsibleId;
+            int currentStatusId = job.CurrentStage ?? 1;
+            bool statusChanged = previousStatusId != currentStatusId;
+            bool assignedChanged = previousResponsibleId != job.ResponsibleId;
 
             await _context.SaveChangesAsync();
 
@@ -816,10 +825,15 @@ namespace CRM_Api.Controllers
             var job = await _context.Jobs.FindAsync(id);
             if (job == null) return NotFound();
 
-            job.CurrentStage = 6; // Completed
+            int oldStatusId = job.CurrentStage ?? 0;
+            job.CurrentStage = 12; // Completed
             job.UpdateDateTime = DateTime.Now;
 
             await _context.SaveChangesAsync();
+
+            // Trigger notification
+            await _notificationService.NotifyStatusChangeAsync(job.Id, oldStatusId, 12);
+
             return NoContent();
         }
 
