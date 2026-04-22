@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CRM_Api.Services
 {
-    public class JobNotifenicationService : IJobNotificationService
+    public class JobNotificationService : IJobNotificationService
     {
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly IEmailService _emailService;
@@ -183,12 +183,6 @@ namespace CRM_Api.Services
                         var resp = await userManager.FindByIdAsync(job.OriginalResponsibleId.Value.ToString());
                         if (resp != null) recipients.Add(resp);
                     }
-                    else if (job.ResponsibleId.HasValue && job.ResponsibleId != temporaryAssigneeId)
-                    {
-                        // Fallback if OriginalResponsibleId wasn't set yet in this specific entity instance
-                        var resp = await userManager.FindByIdAsync(job.ResponsibleId.Value.ToString());
-                        if (resp != null) recipients.Add(resp);
-                    }
 
                     // Add Owner
                     if (job.OwnerId.HasValue)
@@ -204,13 +198,8 @@ namespace CRM_Api.Services
                         .Select(g => g.First())
                         .ToList();
 
-                    _logger.LogInformation("Identified {Count} unique recipients for temporary assignment notification: {Emails}", 
-                        uniqueRecipients.Count, 
-                        string.Join(", ", uniqueRecipients.Select(r => r.Email)));
-
                     foreach (var user in uniqueRecipients)
                     {
-                        _logger.LogInformation("Attempting to send temporary assignment email to: {Email}", user.Email);
                         string subject = $"Temporary Assignment: {jobTypeName} - {customerName}";
                         string title = "Temporary Coverage Alert";
                         
@@ -236,8 +225,6 @@ namespace CRM_Api.Services
 
                         await emailService.SendEmailAsync(user.Email!, subject, body, title);
                     }
-
-                    _logger.LogInformation("Temporary assignment notification process completed for Job ID: {JobId}", jobId);
                 }
                 catch (Exception ex)
                 {
@@ -286,7 +273,6 @@ namespace CRM_Api.Services
                 // Notify parties
                 var recipients = new List<User>();
                 User? originalResp = null;
-                User? tempStaff = null;
 
                 if (originalResponsibleId.HasValue)
                 {
@@ -295,7 +281,7 @@ namespace CRM_Api.Services
                 }
                 if (tempAssigneeId.HasValue)
                 {
-                    tempStaff = await userManager.FindByIdAsync(tempAssigneeId.Value.ToString());
+                    var tempStaff = await userManager.FindByIdAsync(tempAssigneeId.Value.ToString());
                     if (tempStaff != null) recipients.Add(tempStaff);
                 }
                 if (job.OwnerId.HasValue)
@@ -405,11 +391,8 @@ namespace CRM_Api.Services
                         .Where(r => r.Id != comment.UserId)
                         .ToList();
 
-                    _logger.LogInformation("Found {Count} recipients for comment notification.", uniqueRecipients.Count);
-
                     foreach (var user in uniqueRecipients)
                     {
-                        _logger.LogInformation("Sending comment notification email to: {Email}", user.Email);
                         string subject = $"New Comment: {jobTypeName} - {customerName}";
                         string title = "Job Comment Added";
                         
@@ -502,7 +485,6 @@ namespace CRM_Api.Services
                     // If "Ready for Check", also add all Checkers and Admins
                     if (newStatusId == 5) 
                     {
-                        _logger.LogInformation("Identifying Checkers and Admins for review notification...");
                         var checkers = await userManager.GetUsersInRoleAsync("Checker");
                         var admins = await userManager.GetUsersInRoleAsync("Admin");
                         var superAdmins = await userManager.GetUsersInRoleAsync("SuperAdmin");
@@ -519,11 +501,8 @@ namespace CRM_Api.Services
                         .Where(r => r.Id != updaterId)
                         .ToList();
 
-                    _logger.LogInformation("Identified {Count} unique recipients for notification.", uniqueRecipients.Count);
-
                     foreach (var user in uniqueRecipients)
                     {
-                        _logger.LogInformation("Attempting to send status email to: {Email}", user.Email);
                         string subject = newStatusId == 99 
                             ? $"Job Archived: {jobTypeName} - {customerName}" 
                             : $"Status Updated: {jobTypeName} - {customerName}";

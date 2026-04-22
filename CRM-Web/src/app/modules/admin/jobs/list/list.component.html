@@ -5,9 +5,12 @@
         
         <div class="flex flex-col h-full">
 
-            <!-- Header (Hidden in dashboard mode) -->
+            <!-- Main Scrollable Area -->
+            <div class="flex flex-col flex-auto overflow-y-auto">
+
+            <!-- Header (Hidden in dashboard mode) - scrolls away with stats -->
             <div *ngIf="!dashboardMode"
-                class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-8 px-6 md:px-8 border-b bg-card dark:bg-transparent">
+                class="relative flex flex-col sm:flex-row flex-shrink-0 sm:items-center sm:justify-between py-8 px-6 md:px-8 border-b bg-card dark:bg-transparent">
                 <div class="flex flex-col">
                     <!-- Breadcrumbs -->
                     <div class="flex items-center text-sm font-medium text-secondary whitespace-nowrap">
@@ -19,30 +22,27 @@
                     <div class="mt-2 text-4xl font-extrabold tracking-tight leading-none text-slate-900 dark:text-white">Jobs Dashboard</div>
                 </div>
                 <!-- Search + Export (aligned right) -->
-                <div class="flex items-center mt-6 sm:mt-0 sm:ml-4 gap-3">
+                <div class="flex items-center mt-6 sm:mt-0 sm:ml-auto gap-3">
                     <!-- Search -->
-                    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded min-w-64">
-                        <mat-icon class="icon-size-5" matPrefix
-                            [svgIcon]="'heroicons_solid:magnifying-glass'"></mat-icon>
-                        <input matInput [formControl]="searchInputControl" [autocomplete]="'off'"
-                            [placeholder]="'Search jobs by caption or customer...'">
-                    </mat-form-field>
+                    <div class="flex items-center h-9 px-3 border border-gray-300 rounded-full bg-white min-w-64 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-colors">
+                        <mat-icon class="icon-size-5 text-hint mr-2" [svgIcon]="'heroicons_solid:magnifying-glass'"></mat-icon>
+                        <input class="border-none outline-none bg-transparent w-full text-sm placeholder:text-hint"
+                            [formControl]="searchInputControl" autocomplete="off"
+                            placeholder="Search jobs by caption or customer...">
+                    </div>
 
                     <!-- Export Button -->
-                    <button mat-flat-button class="bg-emerald-600 text-white" (click)="exportToExcel()"
+                    <button mat-flat-button class="bg-emerald-600 text-white !h-9 !rounded-full !px-5" (click)="exportToExcel()"
                         matTooltip="Export filtered list to Excel">
                         <mat-icon class="icon-size-5 mr-2"
                             [svgIcon]="'heroicons_outline:document-arrow-down'"></mat-icon>
                         Export
                     </button>
-
-
-
                 </div>
             </div>
 
             <!-- Statistics Header (Hidden in dashboard mode) -->
-            <div *ngIf="!dashboardMode && stats" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-6 px-6 md:px-8 py-6 bg-gray-50 dark:bg-transparent border-b">
+            <div *ngIf="!dashboardMode && stats" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-6 px-6 md:px-8 py-6 bg-gray-50 dark:bg-transparent border-b flex-shrink-0">
                 
                 <!-- Total Active -->
                 <div class="flex flex-col flex-auto p-6 bg-card rounded-2xl shadow overflow-hidden border-l-4 border-primary">
@@ -143,12 +143,12 @@
                 </div>
             </div>
 
-            <!-- Main -->
-            <div class="flex flex-col flex-auto overflow-hidden">
+            <!-- Sticky App Shell: Filters + Table + Paginator -->
+            <div class="sticky top-0 z-20 flex flex-col bg-card dark:bg-transparent" style="height: calc(100vh - 64px);">
 
                 <!-- Filters Bar -->
                 <div
-                    class="flex flex-col sm:flex-row items-center justify-between py-4 px-6 md:px-8 border-b bg-gray-50 dark:bg-transparent">
+                    class="flex flex-col sm:flex-row items-center justify-between py-4 px-6 md:px-8 border-b bg-gray-50 dark:bg-transparent flex-shrink-0">
                     <div class="flex flex-wrap items-center gap-4">
                         <!-- Status Filter -->
                         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-40" appearance="outline">
@@ -305,7 +305,7 @@
                 </mat-menu>
 
                 <!-- Jobs Table -->
-                <div class="flex flex-col flex-auto overflow-y-auto px-6 md:px-8">
+                <div class="flex flex-col flex-auto overflow-y-auto min-h-0 px-6 md:px-8">
                     <table mat-table [dataSource]="jobs" class="w-full bg-transparent">
 
                         <!-- Checkbox Column -->
@@ -543,7 +543,7 @@
                 </div>
 
                 <!-- Paginator Footer -->
-                <div class="flex items-center justify-between border-t bg-gray-50 dark:bg-transparent px-6 md:px-8">
+                <div class="flex items-center justify-between border-t bg-gray-50 dark:bg-transparent px-6 md:px-8 flex-shrink-0">
                     <mat-paginator [length]="totalCount" [pageSize]="filter.pageSize"
                         [pageSizeOptions]="[5, 10, 25, 100]" [showFirstLastButtons]="true"
                         (page)="onPageChange($event)"></mat-paginator>
@@ -552,6 +552,7 @@
                     </div>
                 </div>
 
+            </div>
             </div>
 
         </div>

@@ -13,11 +13,13 @@ namespace CRM_Api.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IWebHostEnvironment _env;
+        private readonly Services.Interfaces.IEmailService _emailService;
 
-        public FormController(AppDbContext context, IWebHostEnvironment env)
+        public FormController(AppDbContext context, IWebHostEnvironment env, Services.Interfaces.IEmailService emailService)
         {
             _context = context;
             _env = env;
+            _emailService = emailService;
         }
 
         // GET: api/Form
@@ -203,8 +205,20 @@ namespace CRM_Api.Controllers
 
             try
             {
-                // In a real scenario, this would use an IEmailService to send the Base64 attachment.
-                return Ok(new { Message = "Email sent successfully (Simulated)" });
+                byte[] fileBytes = Convert.FromBase64String(base64Doc);
+                string subject = !string.IsNullOrEmpty(emailDetails.Subject) ? emailDetails.Subject : $"Form Delivery: {slug}";
+                string body = !string.IsNullOrEmpty(emailDetails.Body) ? emailDetails.Body : $"Please find the requested form attached.";
+
+                await _emailService.SendEmailAsync(
+                    emailDetails.EmailId,
+                    subject,
+                    body,
+                    "Form Delivery",
+                    fileBytes,
+                    finalFileName
+                );
+
+                return Ok(new { Message = "Email sent successfully" });
             }
             catch (Exception ex)
             {
