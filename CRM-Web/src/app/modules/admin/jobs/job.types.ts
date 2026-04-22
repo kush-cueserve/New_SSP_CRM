@@ -98,6 +98,7 @@ export interface JobFilter {
     pageNumber: number;
     pageSize: number;
     orderBy?: string;
+    orderDirection?: 'asc' | 'desc';
 }
 
 export interface JobPagedResponse {

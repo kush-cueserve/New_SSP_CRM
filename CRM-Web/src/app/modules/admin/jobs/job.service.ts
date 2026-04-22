@@ -33,6 +33,7 @@ export class JobService {
         params = params.set('PageSize', filter.pageSize.toString());
         
         if (filter.orderBy) params = params.set('OrderBy', filter.orderBy);
+        if (filter.orderDirection) params = params.set('OrderDirection', filter.orderDirection);
  
         console.log('Fetching Jobs with Filter:', filter);
         return this._httpClient.get<JobPagedResponse>(this._baseUrl, { params }).pipe(

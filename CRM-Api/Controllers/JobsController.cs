@@ -65,7 +65,18 @@ namespace CRM_Api.Controllers
                 // Default: Hide "Todo Later" (ID 10) and "Completed" (ID 12)
                 query = query.Where(j => j.CurrentStage != 10 && j.CurrentStage != 12);
             }
-            if (filter.Priority.HasValue) query = query.Where(j => j.Priority == filter.Priority);
+            if (filter.Priority.HasValue) 
+            {
+                if (filter.Priority == 3) // Overdue
+                {
+                    query = query.Where(j => j.Deadline.HasValue && j.Deadline.Value < DateTime.Now);
+                }
+                else
+                {
+                    query = query.Where(j => j.Priority == filter.Priority);
+                }
+            }
+
             if (filter.JobTypeId.HasValue) query = query.Where(j => j.JobTypeId == filter.JobTypeId);
             if (filter.OwnerId.HasValue) query = query.Where(j => j.OwnerId == filter.OwnerId);
             if (filter.ResponsibleId.HasValue) query = query.Where(j => j.ResponsibleId == filter.ResponsibleId);
@@ -98,9 +109,34 @@ namespace CRM_Api.Controllers
             // Total Count before paging
             var totalCount = await query.CountAsync();
 
-            // Paging
+            // Paging and Sorting
+            bool isAsc = filter.OrderDirection?.ToLower() == "asc";
+            string orderBy = filter.OrderBy?.ToLower() ?? "deadline";
+
+            switch (orderBy)
+            {
+                case "deadline":
+                case "daysleft":
+                    query = isAsc ? query.OrderBy(j => j.Deadline) : query.OrderByDescending(j => j.Deadline);
+                    break;
+                case "assigndate":
+                    query = isAsc ? query.OrderBy(j => j.StartDate ?? j.CreatedDateTime) : query.OrderByDescending(j => j.StartDate ?? j.CreatedDateTime);
+                    break;
+                case "caption":
+                    query = isAsc ? query.OrderBy(j => j.Caption) : query.OrderByDescending(j => j.Caption);
+                    break;
+                case "priority":
+                    query = isAsc ? query.OrderBy(j => j.Priority) : query.OrderByDescending(j => j.Priority);
+                    break;
+                default:
+                    query = query.OrderByDescending(j => j.Deadline);
+                    break;
+            }
+
+            // Secondary sort for stability
+            query = ((IOrderedQueryable<Job>)query).ThenByDescending(j => j.UpdateDateTime);
+
             var items = await query
-                .OrderByDescending(j => j.UpdateDateTime)
                 .Skip((filter.PageNumber - 1) * filter.PageSize)
                 .Take(filter.PageSize)
                 .Select(j => new JobDto
