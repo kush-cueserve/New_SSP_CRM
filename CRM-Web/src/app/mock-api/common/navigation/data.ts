@@ -24,6 +24,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
         link : '/jobs'
     },
     {
+        id   : 'calls',
+        title: 'Call Tracker',
+        type : 'basic',
+        icon : 'heroicons_outline:phone',
+        link : '/calls'
+    },
+    {
         id   : 'forms',
         title: 'Forms',
         type : 'basic',

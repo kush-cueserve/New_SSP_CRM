@@ -58,6 +58,9 @@ namespace CRM_Api.Data
         public DbSet<FSNoteMaster> FSNoteMasters { get; set; } = null!;
         public DbSet<CustomerFSNote> CustomerFSNotes { get; set; } = null!;
         public DbSet<SmtpSetting> SmtpSettings { get; set; } = null!;
+        public DbSet<CallLogs> CallLogs { get; set; } = null!;
+        public DbSet<Purpose> Purposes { get; set; } = null!;
+        public DbSet<CallLogComment> CallLogComments { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

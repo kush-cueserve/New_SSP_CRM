@@ -1,4 +1,5 @@
 using CRM_Api.Models.Entities.Customer;
+using CRM_Api.Models.Entities.Operations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -567,6 +568,20 @@ namespace CRM_Api.Data
                 new FormMaster { Id = 28, Name = "Letterhead SSP2 - Napa Arinaphat", Slug = "letterhead-napa", Category = "Templates", Icon = "heroicons_outline:mail", AllowPdf = false, AllowEmail = false, AllowView = true, AllowDownload = true, DisplayOrder = 28 },
                 new FormMaster { Id = 29, Name = "Don't Tell Tiger Letterhead - Napa", Slug = "letterhead-tiger-napa", Category = "Templates", Icon = "heroicons_outline:mail", AllowPdf = false, AllowEmail = false, AllowView = true, AllowDownload = true, DisplayOrder = 29 },
                 new FormMaster { Id = 30, Name = "Don't Tell Tiger Letterhead - Sukhwinder", Slug = "letterhead-tiger-sukhwinder", Category = "Templates", Icon = "heroicons_outline:mail", AllowPdf = false, AllowEmail = false, AllowView = true, AllowDownload = true, DisplayOrder = 30 }
+            );
+
+            // Seed Purpose (Call Tracker Purposes from screenshots)
+            modelBuilder.Entity<Purpose>().HasData(
+                new Purpose { ID = 1, PurposeName = "Meeting", IsActive = true },
+                new Purpose { ID = 2, PurposeName = "Call Back", IsActive = true },
+                new Purpose { ID = 3, PurposeName = "Potential Client", IsActive = true },
+                new Purpose { ID = 4, PurposeName = "Require Information", IsActive = true },
+                new Purpose { ID = 5, PurposeName = "Business Registration", IsActive = true },
+                new Purpose { ID = 6, PurposeName = "Loan", IsActive = true },
+                new Purpose { ID = 7, PurposeName = "Doing Accounting: BAS / Tax Return", IsActive = true },
+                new Purpose { ID = 8, PurposeName = "Advise: Business / Tax", IsActive = true },
+                new Purpose { ID = 9, PurposeName = "Superannuation: Rollover / SMSF", IsActive = true },
+                new Purpose { ID = 10, PurposeName = "Others", IsActive = true }
             );
         }
     }

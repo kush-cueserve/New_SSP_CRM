@@ -28,5 +28,8 @@ namespace CRM_Api.Services
                 return null;
             }
         }
+
+        public bool IsAdmin => _httpContextAccessor.HttpContext?.User?.IsInRole("Admin") ?? false;
+        public bool IsSuperAdmin => _httpContextAccessor.HttpContext?.User?.IsInRole("SuperAdmin") ?? false;
     }
 }
