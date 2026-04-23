@@ -38,6 +38,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
         link : '/forms'
     },
     {
+        id   : 'reports',
+        title: 'Reports',
+        type : 'basic',
+        icon : 'heroicons_outline:document-chart-bar',
+        link : '/reports'
+    },
+    {
         id   : 'settings',
         title: 'Settings',
         type : 'collapsable',

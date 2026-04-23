@@ -36,22 +36,37 @@ namespace CRM_Api.Services
                 .AsQueryable();
 
             // Filtering logic
-            if (!filter.IncludeArchived)
+            // IsDeleted is the real archive flag in the database
+            if (filter.IncludeArchived)
             {
-                query = query.Where(c => c.IsArchived == false || c.IsArchived == null);
+                // Show only archived/deleted records
+                query = query.Where(c => c.IsDeleted == true);
+            }
+            else
+            {
+                // Default: hide archived/deleted records
+                query = query.Where(c => c.IsDeleted == false);
             }
             
-            if (!filter.IncludeExcluded)
+            if (filter.IncludeExcluded)
+            {
+                // Show only excluded records
+                query = query.Where(c => c.IsExcluded == true);
+            }
+            else
             {
                 query = query.Where(c => c.IsExcluded == false || c.IsExcluded == null);
             }
 
-            if (!filter.IncludeInactive)
+            if (filter.IncludeInactive)
+            {
+                // Show only inactive records
+                query = query.Where(c => c.IsActive == false);
+            }
+            else
             {
                 query = query.Where(c => c.IsActive == true || c.IsActive == null);
             }
-            
-            query = query.Where(c => !c.IsDeleted);
 
             if (filter.ContactType.HasValue && filter.ContactType.Value > 0)
             {

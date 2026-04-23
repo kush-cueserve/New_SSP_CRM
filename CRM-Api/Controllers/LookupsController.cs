@@ -30,7 +30,6 @@ namespace CRM_Api.Controllers
             var jobStatusMasters = await _context.JobStatusMasters.ToListAsync();
             var jobTypeStatusMappings = await _context.JobTypeStatusMappings.ToListAsync();
             var customers = await _context.Customers.Select(c => new { id = c.Id, name = c.Name }).ToListAsync();
-
             return Ok(new
             {
                 ContactTypes = contactTypes,

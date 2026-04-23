@@ -80,6 +80,7 @@ export const appRoutes: Route[] = [
             {path: 'jobs', loadChildren: () => import('app/modules/admin/jobs/jobs.routes')},
             {path: 'calls', loadChildren: () => import('app/modules/admin/calls/calls.routes')},
             {path: 'forms', loadChildren: () => import('app/modules/admin/forms/forms.routes')},
+            {path: 'reports', loadChildren: () => import('app/modules/admin/reports/reports.routes')},
             {path: 'settings', loadChildren: () => import('app/modules/admin/settings/settings.routes')},
         ]
     }

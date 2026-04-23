@@ -102,6 +102,7 @@ builder.Services.AddScoped<IAdminReminderService, AdminReminderService>();
 builder.Services.AddScoped<IStaffReminderService, StaffReminderService>();
 builder.Services.AddScoped<IJobNotificationService, JobNotificationService>();
 builder.Services.AddScoped<ICallService, CallService>();
+builder.Services.AddScoped<IReportService, ReportService>();
 
 
 // Configure OpenAPI and Swagger
