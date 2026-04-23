@@ -211,4 +211,23 @@ export class RelationshipsComponent implements OnInit {
         if (!date) return '-';
         return new Date(date).toLocaleDateString();
     }
+
+    isExpired(endDate: any): boolean {
+        if (!endDate) return false;
+        
+        try {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const expiryDate = new Date(endDate);
+            // Handle invalid dates
+            if (isNaN(expiryDate.getTime())) return false;
+            
+            expiryDate.setHours(0, 0, 0, 0);
+            
+            return expiryDate.getTime() < today.getTime();
+        } catch (e) {
+            return false;
+        }
+    }
 }

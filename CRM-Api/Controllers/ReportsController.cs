@@ -42,5 +42,22 @@ namespace CRM_Api.Controllers
 
             return File(data, contentType, fileName);
         }
+
+        [HttpPost("fs-notes/export")]
+        public async Task<IActionResult> ExportFSNotes([FromBody] FSNotesReportFilter filter)
+        {
+            var data = await _reportService.GenerateFSNotesReportAsync(filter);
+
+            string fileName = $"FS_Notes_{System.DateTime.Now:yyyyMMdd_HHmmss}.csv";
+            string contentType = "text/csv";
+
+            if (filter.ExportFormat == "txt")
+            {
+                fileName = fileName.Replace(".csv", ".txt");
+                contentType = "text/plain";
+            }
+
+            return File(data, contentType, fileName);
+        }
     }
 }

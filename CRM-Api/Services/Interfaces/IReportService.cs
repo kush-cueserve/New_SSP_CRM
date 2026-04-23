@@ -8,5 +8,6 @@ namespace CRM_Api.Services.Interfaces
     {
         Task<IEnumerable<ReportFieldDto>> GetAvailableFieldsAsync(int? clientType);
         Task<byte[]> GenerateClientDetailsReportAsync(ClientDetailsReportFilter filter);
+        Task<byte[]> GenerateFSNotesReportAsync(FSNotesReportFilter filter);
     }
 }

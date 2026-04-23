@@ -10,5 +10,9 @@ export default [
     {
         path: 'client-details',
         component: ClientDetailsComponent
+    },
+    {
+        path: 'notes-for-fs',
+        loadComponent: () => import('./notes-for-fs/notes-for-fs.component').then(m => m.NotesForFSComponent)
     }
 ] as Routes;

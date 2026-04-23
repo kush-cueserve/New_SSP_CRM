@@ -107,8 +107,9 @@ namespace CRM_Api.Services
             if (filter.PartnerId.HasValue)
             {
                 // Join with CustomerRelationships to find customers who have this person as a partner
+                var today = DateTime.Today;
                 var sourceCustomerIds = await _context.CustomerRelationships
-                    .Where(r => r.TargetCustomerId == filter.PartnerId.Value && !r.IsDeleted)
+                    .Where(r => r.TargetCustomerId == filter.PartnerId.Value && !r.IsDeleted && (r.EndDate == null || r.EndDate >= today))
                     .Select(r => r.SourceCustomerId)
                     .Distinct()
                     .ToListAsync();
@@ -145,6 +146,10 @@ namespace CRM_Api.Services
             }
             if (filter.StaffInCharge.HasValue) query = query.Where(c => c.StaffInCharge == filter.StaffInCharge.Value);
             if (filter.TradingStatus.HasValue) query = query.Where(c => c.TradingStatus == filter.TradingStatus.Value);
+            if (filter.SelectedCustomerIds != null && filter.SelectedCustomerIds.Any())
+            {
+                query = query.Where(c => filter.SelectedCustomerIds.Contains(c.Id));
+            }
 
             // Fetch Data
             var customers = await query.ToListAsync();
@@ -222,6 +227,107 @@ namespace CRM_Api.Services
                 "PostalCode" => customer.Addresses.FirstOrDefault()?.PostalCode ?? "",
                 _ => ""
             };
+        }
+
+        public async Task<byte[]> GenerateFSNotesReportAsync(FSNotesReportFilter filter)
+        {
+            var query = _context.Customers
+                .Include(c => c.FSNotes).ThenInclude(n => n.FSNoteMaster)
+                .AsQueryable();
+
+            // Filters (Consistent with Customer Listing)
+            if (filter.ContactType.HasValue)
+                query = query.Where(c => c.ContactType == filter.ContactType.Value);
+
+            if (filter.ClientType.HasValue)
+                query = query.Where(c => c.ClientType == filter.ClientType.Value);
+
+            if (filter.StaffInCharge.HasValue)
+                query = query.Where(c => c.StaffInCharge == filter.StaffInCharge.Value);
+
+            if (filter.PartnerId.HasValue)
+            {
+                var today = DateTime.Today;
+                var sourceCustomerIds = await _context.CustomerRelationships
+                    .Where(r => r.TargetCustomerId == filter.PartnerId.Value && !r.IsDeleted && (r.EndDate == null || r.EndDate >= today))
+                    .Select(r => r.SourceCustomerId)
+                    .Distinct()
+                    .ToListAsync();
+                
+                query = query.Where(c => sourceCustomerIds.Contains(c.Id));
+            }
+            else if (!string.IsNullOrEmpty(filter.Partner)) 
+            {
+                var partnerSearch = filter.Partner.Trim().ToLower();
+                query = query.Where(c => c.Partner != null && c.Partner.ToLower().Contains(partnerSearch));
+            }
+
+            if (filter.IsActive.HasValue)
+            {
+                if (filter.IsActive.Value) query = query.Where(c => c.IsActive == true);
+                else query = query.Where(c => c.IsActive != true);
+            }
+
+            if (filter.IsArchived == true)
+                query = query.Where(c => c.IsDeleted == true);
+            else
+                query = query.Where(c => c.IsDeleted == false);
+
+            if (filter.IsExcluded.HasValue)
+            {
+                if (filter.IsExcluded.Value) query = query.Where(c => c.IsExcluded == true);
+                else query = query.Where(c => c.IsExcluded != true);
+            }
+
+            if (filter.SelectedCustomerIds != null && filter.SelectedCustomerIds.Any())
+            {
+                query = query.Where(c => filter.SelectedCustomerIds.Contains(c.Id));
+            }
+
+            // Fetch Data
+            var customers = await query.ToListAsync();
+
+            // Filter by Note Types if specified
+            if (filter.SelectedNoteTypeIds != null && filter.SelectedNoteTypeIds.Any())
+            {
+                // We keep only customers who have at least one note of the selected types, 
+                // OR we filter the notes themselves later? 
+                // Usually, report shows all customers matching filters, and their notes of selected types.
+            }
+
+            // Sorting
+            if (filter.OrderBy == "Name")
+                customers = filter.OrderDirection == "DESC" ? customers.OrderByDescending(c => c.Name).ToList() : customers.OrderBy(c => c.Name).ToList();
+            else
+                customers = filter.OrderDirection == "DESC" ? customers.OrderByDescending(c => c.Code).ToList() : customers.OrderBy(c => c.Code).ToList();
+
+            var sb = new StringBuilder();
+
+            // Header: Code, Name, Note Type, Note Content
+            sb.AppendLine("\"Client Code\",\"Client Name\",\"Note Type\",\"Note Content\"");
+
+            foreach (var customer in customers)
+            {
+                var notes = customer.FSNotes.AsEnumerable();
+                if (filter.SelectedNoteTypeIds != null && filter.SelectedNoteTypeIds.Any())
+                {
+                    notes = notes.Where(n => filter.SelectedNoteTypeIds.Contains(n.FSNoteMasterID));
+                }
+
+                if (!notes.Any()) continue; // Skip customers with no notes of the selected types
+
+                foreach (var note in notes)
+                {
+                    string code = (customer.Code ?? "").Replace("\"", "\"\"");
+                    string name = (customer.Name ?? "").Replace("\"", "\"\"");
+                    string noteType = (note.FSNoteMaster?.NoteType ?? "Unknown").Replace("\"", "\"\"");
+                    string content = (note.NoteContent ?? "").Replace("\"", "\"\"");
+
+                    sb.AppendLine($"\"{code}\",\"{name}\",\"{noteType}\",\"{content}\"");
+                }
+            }
+
+            return Encoding.UTF8.GetBytes(sb.ToString());
         }
     }
 }

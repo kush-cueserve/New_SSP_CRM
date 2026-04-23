@@ -75,6 +75,7 @@ namespace CRM_Api.Models.Entities.Customer
         public virtual ContactInfo? ContactInfo { get; set; }
         public virtual ICollection<CustomerServiceDetail> Services { get; set; } = new List<CustomerServiceDetail>();
         public virtual ICollection<DynamicFieldValue> DynamicFieldValues { get; set; } = new List<DynamicFieldValue>();
+        public virtual ICollection<CustomerFSNote> FSNotes { get; set; } = new List<CustomerFSNote>();
     }
 
     [Table("Address", Schema = "cust")]

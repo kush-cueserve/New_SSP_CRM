@@ -22,10 +22,27 @@ export interface ClientDetailsReportFilter {
     isArchived?: boolean;
     isExcluded?: boolean;
     staffInCharge?: number;
+    selectedCustomerIds?: number[];
     tradingStatus?: number;
     orderBy?: string;
     orderDirection?: string;
     selectedFieldKeys: string[];
+    exportFormat: string;
+}
+
+export interface FSNotesReportFilter {
+    contactType?: number;
+    partner?: string;
+    partnerId?: number;
+    staffInCharge?: number;
+    clientType?: number;
+    isActive?: boolean;
+    isArchived?: boolean;
+    isExcluded?: boolean;
+    selectedNoteTypeIds: number[];
+    selectedCustomerIds?: number[];
+    orderBy?: string;
+    orderDirection?: string;
     exportFormat: string;
 }
 
@@ -53,6 +70,15 @@ export class ReportsService {
      */
     exportClientDetails(filter: ClientDetailsReportFilter): Observable<Blob> {
         return this._httpClient.post(`${this._baseUrl}/client-details/export`, filter, {
+            responseType: 'blob'
+        });
+    }
+
+    /**
+     * Export FS Notes report
+     */
+    exportFSNotes(filter: FSNotesReportFilter): Observable<Blob> {
+        return this._httpClient.post(`${this._baseUrl}/fs-notes/export`, filter, {
             responseType: 'blob'
         });
     }

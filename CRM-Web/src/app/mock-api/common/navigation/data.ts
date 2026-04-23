@@ -38,11 +38,26 @@ export const defaultNavigation: FuseNavigationItem[] = [
         link : '/forms'
     },
     {
-        id   : 'reports',
-        title: 'Reports',
-        type : 'basic',
-        icon : 'heroicons_outline:document-chart-bar',
-        link : '/reports'
+        id      : 'reports',
+        title   : 'Reports',
+        type    : 'collapsable',
+        icon    : 'heroicons_outline:document-chart-bar',
+        children: [
+            {
+                id   : 'reports.client-details',
+                title: 'Client Details',
+                type : 'basic',
+                icon : 'heroicons_outline:identification',
+                link : '/reports/client-details'
+            },
+            {
+                id   : 'reports.notes-for-fs',
+                title: 'Notes for FS',
+                type : 'basic',
+                icon : 'heroicons_outline:document-text',
+                link : '/reports/notes-for-fs'
+            }
+        ]
     },
     {
         id   : 'settings',
