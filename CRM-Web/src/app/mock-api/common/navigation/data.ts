@@ -78,6 +78,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type : 'basic',
                 icon : 'heroicons_outline:adjustments-horizontal',
                 link : '/settings/dynamic-fields'
+            },
+            {
+                id   : 'settings.passwords',
+                title: 'Password Manager',
+                type : 'basic',
+                icon : 'heroicons_outline:key',
+                link : '/settings/passwords'
             }
         ]
     }

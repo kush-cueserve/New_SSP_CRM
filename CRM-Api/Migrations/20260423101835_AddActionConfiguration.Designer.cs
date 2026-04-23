@@ -4,6 +4,7 @@ using CRM_Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRM_Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260423101835_AddActionConfiguration")]
+    partial class AddActionConfiguration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1039,72 +1042,72 @@ namespace CRM_Api.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 504, DateTimeKind.Local).AddTicks(2370),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 118, DateTimeKind.Local).AddTicks(9034),
                             CustomerTypeNM = "Individual",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 505, DateTimeKind.Local).AddTicks(6772)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 151, DateTimeKind.Local).AddTicks(7376)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 505, DateTimeKind.Local).AddTicks(7948),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 152, DateTimeKind.Local).AddTicks(765),
                             CustomerTypeNM = "Company",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 505, DateTimeKind.Local).AddTicks(7950)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 152, DateTimeKind.Local).AddTicks(769)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 505, DateTimeKind.Local).AddTicks(7952),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 152, DateTimeKind.Local).AddTicks(774),
                             CustomerTypeNM = "Sole Proprietor",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 505, DateTimeKind.Local).AddTicks(7952)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 152, DateTimeKind.Local).AddTicks(774)
                         },
                         new
                         {
                             Id = 4,
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 505, DateTimeKind.Local).AddTicks(7953),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 152, DateTimeKind.Local).AddTicks(776),
                             CustomerTypeNM = "Trust",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 505, DateTimeKind.Local).AddTicks(7953)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 152, DateTimeKind.Local).AddTicks(776)
                         },
                         new
                         {
                             Id = 5,
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 505, DateTimeKind.Local).AddTicks(7955),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 152, DateTimeKind.Local).AddTicks(777),
                             CustomerTypeNM = "AKA",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 505, DateTimeKind.Local).AddTicks(7956)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 152, DateTimeKind.Local).AddTicks(777)
                         },
                         new
                         {
                             Id = 6,
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 505, DateTimeKind.Local).AddTicks(7956),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 152, DateTimeKind.Local).AddTicks(778),
                             CustomerTypeNM = "Partnership",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 505, DateTimeKind.Local).AddTicks(7957)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 152, DateTimeKind.Local).AddTicks(780)
                         },
                         new
                         {
                             Id = 7,
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 505, DateTimeKind.Local).AddTicks(7958),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 152, DateTimeKind.Local).AddTicks(781),
                             CustomerTypeNM = "SMSF",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 505, DateTimeKind.Local).AddTicks(7958)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 152, DateTimeKind.Local).AddTicks(781)
                         },
                         new
                         {
                             Id = 8,
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 505, DateTimeKind.Local).AddTicks(7959),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 152, DateTimeKind.Local).AddTicks(782),
                             CustomerTypeNM = "Staff",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 505, DateTimeKind.Local).AddTicks(7960)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 152, DateTimeKind.Local).AddTicks(782)
                         },
                         new
                         {
                             Id = 9,
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 505, DateTimeKind.Local).AddTicks(7961),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 152, DateTimeKind.Local).AddTicks(784),
                             CustomerTypeNM = "Supplier",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 505, DateTimeKind.Local).AddTicks(7961)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 152, DateTimeKind.Local).AddTicks(950)
                         },
                         new
                         {
                             Id = 10,
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 505, DateTimeKind.Local).AddTicks(7962),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 152, DateTimeKind.Local).AddTicks(957),
                             CustomerTypeNM = "Other",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 505, DateTimeKind.Local).AddTicks(7963)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 152, DateTimeKind.Local).AddTicks(957)
                         });
                 });
 
@@ -1185,20 +1188,20 @@ namespace CRM_Api.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(2670),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(5320),
                             IsActive = true,
                             NoteType = "Retained Earnings",
                             SortOrder = 1,
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(2672)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(5323)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(3685),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(6434),
                             IsActive = true,
                             NoteType = "Common Note",
                             SortOrder = 2,
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(3688)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(6436)
                         });
                 });
 
@@ -1280,13 +1283,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = true,
                             AllowView = true,
                             Category = "Tax",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(4643),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(7439),
                             DisplayOrder = 1,
                             Icon = "heroicons_outline:document-text",
                             IsActive = true,
                             Name = "Individual Tax Return",
                             Slug = "individual-tax-return",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(4645)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(7442)
                         },
                         new
                         {
@@ -1296,13 +1299,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = true,
                             AllowView = true,
                             Category = "Checklist",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7029),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(9941),
                             DisplayOrder = 2,
                             Icon = "heroicons_outline:clipboard-list",
                             IsActive = true,
                             Name = "BAS Bookkeeping Checklist",
                             Slug = "bas-bookkeeping-checklist",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7031)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(9944)
                         },
                         new
                         {
@@ -1312,13 +1315,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = true,
                             AllowView = true,
                             Category = "Checklist",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7036),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(9948),
                             DisplayOrder = 3,
                             Icon = "heroicons_outline:clipboard-list",
                             IsActive = true,
                             Name = "BAS Lodgment Checklist",
                             Slug = "bas-lodgment-checklist",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7036)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(9949)
                         },
                         new
                         {
@@ -1328,13 +1331,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = true,
                             AllowView = true,
                             Category = "Tax",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7039),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(9951),
                             DisplayOrder = 4,
                             Icon = "heroicons_outline:document-text",
                             IsActive = true,
                             Name = "Tax Return Partnership",
                             Slug = "tax-return-partnership",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7039)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(9952)
                         },
                         new
                         {
@@ -1344,13 +1347,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = true,
                             AllowView = true,
                             Category = "Tax",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7041),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(9954),
                             DisplayOrder = 5,
                             Icon = "heroicons_outline:document-text",
                             IsActive = true,
                             Name = "Tax Return Company",
                             Slug = "tax-return-company",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7042)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(9954)
                         },
                         new
                         {
@@ -1360,13 +1363,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = true,
                             AllowView = true,
                             Category = "Registration",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7043),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(9957),
                             DisplayOrder = 6,
                             Icon = "heroicons_outline:briefcase",
                             IsActive = true,
                             Name = "Business Registration",
                             Slug = "business-registration",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7044)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(9958)
                         },
                         new
                         {
@@ -1376,13 +1379,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = true,
                             AllowView = true,
                             Category = "Accounts",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7047),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(9961),
                             DisplayOrder = 7,
                             Icon = "heroicons_outline:calculator",
                             IsActive = true,
                             Name = "Bookkeeping Set",
                             Slug = "bookkeeping-set",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7047)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(9961)
                         },
                         new
                         {
@@ -1392,13 +1395,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = true,
                             AllowView = true,
                             Category = "HR",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7049),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(9964),
                             DisplayOrder = 8,
                             Icon = "heroicons_outline:user",
                             IsActive = true,
                             Name = "Employee Details",
                             Slug = "employee-details",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7049)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(9964)
                         },
                         new
                         {
@@ -1408,13 +1411,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = true,
                             AllowView = true,
                             Category = "General",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7051),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(9966),
                             DisplayOrder = 9,
                             Icon = "heroicons_outline:question-mark-circle",
                             IsActive = true,
                             Name = "Inquiry form",
                             Slug = "inquiry-form",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7052)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(9967)
                         },
                         new
                         {
@@ -1424,13 +1427,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = true,
                             AllowView = true,
                             Category = "General",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7053),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(9969),
                             DisplayOrder = 10,
                             Icon = "heroicons_outline:user-add",
                             IsActive = true,
                             Name = "Client Enrollment",
                             Slug = "client-enrollment",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7054)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(9970)
                         },
                         new
                         {
@@ -1440,13 +1443,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = true,
                             AllowView = true,
                             Category = "Tax",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7056),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(9972),
                             DisplayOrder = 11,
                             Icon = "heroicons_outline:home",
                             IsActive = true,
                             Name = "Rental Property",
                             Slug = "rental-property",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7056)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(9972)
                         },
                         new
                         {
@@ -1456,13 +1459,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = true,
                             AllowView = true,
                             Category = "General",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7058),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(9984),
                             DisplayOrder = 12,
                             Icon = "heroicons_outline:refresh",
                             IsActive = true,
                             Name = "Update Client Details",
                             Slug = "update-client-details",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7058)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(9984)
                         },
                         new
                         {
@@ -1472,13 +1475,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = true,
                             AllowView = true,
                             Category = "Finance",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7100),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(27),
                             DisplayOrder = 13,
                             Icon = "heroicons_outline:cash",
                             IsActive = true,
                             Name = "SuperAnnuation Claim",
                             Slug = "superannuation-claim",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7100)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(27)
                         },
                         new
                         {
@@ -1488,13 +1491,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = false,
                             AllowView = true,
                             Category = "Checklist",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7102),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(30),
                             DisplayOrder = 14,
                             Icon = "heroicons_outline:clock",
                             IsActive = true,
                             Name = "BAS Reminder",
                             Slug = "bas-reminder",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7103)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(30)
                         },
                         new
                         {
@@ -1504,13 +1507,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = false,
                             AllowView = true,
                             Category = "General",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7105),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(33),
                             DisplayOrder = 15,
                             Icon = "heroicons_outline:speakerphone",
                             IsActive = true,
                             Name = "Announcement",
                             Slug = "announcement",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7106)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(33)
                         },
                         new
                         {
@@ -1520,13 +1523,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = true,
                             AllowView = true,
                             Category = "Finance",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7108),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(35),
                             DisplayOrder = 16,
                             Icon = "heroicons_outline:chart-pie",
                             IsActive = true,
                             Name = "Investment Client Form",
                             Slug = "investment-client-form",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7108)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(36)
                         },
                         new
                         {
@@ -1536,13 +1539,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = true,
                             AllowView = true,
                             Category = "HR",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7110),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(37),
                             DisplayOrder = 17,
                             Icon = "heroicons_outline:user-group",
                             IsActive = true,
                             Name = "Employee Details (For SSP Staff only)",
                             Slug = "employee-details-staff",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7111)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(38)
                         },
                         new
                         {
@@ -1552,13 +1555,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = true,
                             AllowView = true,
                             Category = "General",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7112),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(40),
                             DisplayOrder = 18,
                             Icon = "heroicons_outline:phone",
                             IsActive = true,
                             Name = "Call Tracker",
                             Slug = "call-tracker",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7113)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(40)
                         },
                         new
                         {
@@ -1568,13 +1571,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = true,
                             AllowView = true,
                             Category = "General",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7115),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(43),
                             DisplayOrder = 19,
                             Icon = "heroicons_outline:calendar",
                             IsActive = true,
                             Name = "Daily Diary",
                             Slug = "daily-diary",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7116)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(44)
                         },
                         new
                         {
@@ -1584,13 +1587,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = false,
                             AllowView = true,
                             Category = "General",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7118),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(45),
                             DisplayOrder = 20,
                             Icon = "heroicons_outline:external-link",
                             IsActive = true,
                             Name = "JatForm",
                             Slug = "jatform",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7118)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(46)
                         },
                         new
                         {
@@ -1600,13 +1603,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = false,
                             AllowView = true,
                             Category = "External",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7120),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(48),
                             DisplayOrder = 21,
                             Icon = "heroicons_outline:calculator",
                             IsActive = true,
                             Name = "Commonwealth Bank Home Loan Calculators",
                             Slug = "cba-home-loan-calc",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7121)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(48)
                         },
                         new
                         {
@@ -1616,13 +1619,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = false,
                             AllowView = true,
                             Category = "External",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7122),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(198),
                             DisplayOrder = 22,
                             Icon = "heroicons_outline:calculator",
                             IsActive = true,
                             Name = "Pay Calculator Australia",
                             Slug = "pay-calc-au",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7123)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(199)
                         },
                         new
                         {
@@ -1632,13 +1635,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = true,
                             AllowView = true,
                             Category = "Finance",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7125),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(202),
                             DisplayOrder = 23,
                             Icon = "heroicons_outline:home",
                             IsActive = true,
                             Name = "Home Loan Application",
                             Slug = "home-loan-application",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7126)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(203)
                         },
                         new
                         {
@@ -1648,13 +1651,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = false,
                             AllowView = true,
                             Category = "Finance",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7127),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(205),
                             DisplayOrder = 24,
                             Icon = "heroicons_outline:download",
                             IsActive = true,
                             Name = "Authority DASP",
                             Slug = "authority-dasp",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7128)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(206)
                         },
                         new
                         {
@@ -1664,13 +1667,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = false,
                             AllowView = true,
                             Category = "Templates",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7446),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(543),
                             DisplayOrder = 25,
                             Icon = "heroicons_outline:mail",
                             IsActive = true,
                             Name = "Letterhead",
                             Slug = "letterhead",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7449)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(546)
                         },
                         new
                         {
@@ -1680,13 +1683,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = false,
                             AllowView = true,
                             Category = "Templates",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7452),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(549),
                             DisplayOrder = 26,
                             Icon = "heroicons_outline:mail",
                             IsActive = true,
                             Name = "Sukhwinder Letterhead",
                             Slug = "letterhead-sukhwinder",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7453)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(549)
                         },
                         new
                         {
@@ -1696,13 +1699,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = false,
                             AllowView = true,
                             Category = "Templates",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7456),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(552),
                             DisplayOrder = 27,
                             Icon = "heroicons_outline:mail",
                             IsActive = true,
                             Name = "Letterhead SSP2 - Gaurav Mittal",
                             Slug = "letterhead-gaurav",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7456)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(553)
                         },
                         new
                         {
@@ -1712,13 +1715,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = false,
                             AllowView = true,
                             Category = "Templates",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7459),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(556),
                             DisplayOrder = 28,
                             Icon = "heroicons_outline:mail",
                             IsActive = true,
                             Name = "Letterhead SSP2 - Napa Arinaphat",
                             Slug = "letterhead-napa",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7459)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(556)
                         },
                         new
                         {
@@ -1728,13 +1731,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = false,
                             AllowView = true,
                             Category = "Templates",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7461),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(558),
                             DisplayOrder = 29,
                             Icon = "heroicons_outline:mail",
                             IsActive = true,
                             Name = "Don't Tell Tiger Letterhead - Napa",
                             Slug = "letterhead-tiger-napa",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7462)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(559)
                         },
                         new
                         {
@@ -1744,13 +1747,13 @@ namespace CRM_Api.Migrations
                             AllowPdf = false,
                             AllowView = true,
                             Category = "Templates",
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7464),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(561),
                             DisplayOrder = 30,
                             Icon = "heroicons_outline:mail",
                             IsActive = true,
                             Name = "Don't Tell Tiger Letterhead - Sukhwinder",
                             Slug = "letterhead-tiger-sukhwinder",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(7466)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 165, DateTimeKind.Local).AddTicks(562)
                         });
                 });
 
@@ -4171,82 +4174,82 @@ namespace CRM_Api.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(853),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(3112),
                             Description = "Preparation of year-end financial reports",
                             Name = "Annual Financial Statements",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(862)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(3125)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(1701),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(3910),
                             Description = "Company or Trust income tax return filing",
                             Name = "Annual Tax Return",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(1704)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(3912)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(1706),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(3915),
                             Description = "Goods and Services Tax / Business Activity Statement preparation",
                             Name = "GST/BAS Services",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(1707)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(3916)
                         },
                         new
                         {
                             Id = 4,
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(1708),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(3917),
                             Description = "Regular data entry and bank reconciliation",
                             Name = "Bookkeeping",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(1709)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(3918)
                         },
                         new
                         {
                             Id = 5,
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(1710),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(3919),
                             Description = "Weekly/Monthly payroll processing and PAYG",
                             Name = "Payroll Services",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(1710)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(3919)
                         },
                         new
                         {
                             Id = 6,
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(1711),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(3920),
                             Description = "Annual review and company secretarial services",
                             Name = "ASIC Compliance",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(1712)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(3921)
                         },
                         new
                         {
                             Id = 7,
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(1714),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(3922),
                             Description = "FBT return preparation",
                             Name = "Fringe Benefits Tax",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(1714)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(3923)
                         },
                         new
                         {
                             Id = 8,
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(1715),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(3924),
                             Description = "Annual declaration and management",
                             Name = "Workers Compensation",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(1715)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(3925)
                         },
                         new
                         {
                             Id = 9,
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(1717),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(3926),
                             Description = "Self-Managed Super Fund compliance",
                             Name = "SMSF Audit & Tax",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(1717)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(3926)
                         },
                         new
                         {
                             Id = 10,
-                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(1774),
+                            CreatedDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(3984),
                             Description = "Strategic business and tax advice",
                             Name = "General Consulting",
-                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 55, 40, 508, DateTimeKind.Local).AddTicks(1775)
+                            UpdateDateTime = new DateTime(2026, 4, 23, 15, 48, 33, 164, DateTimeKind.Local).AddTicks(3984)
                         });
                 });
 
@@ -5245,6 +5248,72 @@ namespace CRM_Api.Migrations
                         });
                 });
 
+            modelBuilder.Entity("CRM_Api.Models.Entities.Utilities.ActionConfiguration", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CCEmail1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CCEmail2")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime")
+                        .HasColumnName("CreatedDT");
+
+                    b.Property<int?>("CreatedUserId")
+                        .HasColumnType("int")
+                        .HasColumnName("CreatedUserID");
+
+                    b.Property<string>("FromEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordManagerPassword")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SMTPHost")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SMTPPort")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdateDateTime")
+                        .HasColumnType("datetime")
+                        .HasColumnName("UpdDT");
+
+                    b.Property<int?>("UpdateUserId")
+                        .HasColumnType("int")
+                        .HasColumnName("UpdUserID");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ActionConfiguration", "setting");
+                });
+
             modelBuilder.Entity("CRM_Api.Models.Entities.Utilities.FileUploadInfo", b =>
                 {
                     b.Property<int>("Id")
@@ -5521,39 +5590,6 @@ namespace CRM_Api.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserTodos");
-                });
-
-            modelBuilder.Entity("CRM_Api.Models.Entities.Utilities.VaultConfiguration", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedDateTime")
-                        .HasColumnType("datetime")
-                        .HasColumnName("CreatedDT");
-
-                    b.Property<int?>("CreatedUserId")
-                        .HasColumnType("int")
-                        .HasColumnName("CreatedUserID");
-
-                    b.Property<string>("MasterPassword")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdateDateTime")
-                        .HasColumnType("datetime")
-                        .HasColumnName("UpdDT");
-
-                    b.Property<int?>("UpdateUserId")
-                        .HasColumnType("int")
-                        .HasColumnName("UpdUserID");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("VaultConfiguration", "setting");
                 });
 
             modelBuilder.Entity("CRM_Api.Models.User", b =>

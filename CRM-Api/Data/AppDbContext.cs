@@ -61,6 +61,8 @@ namespace CRM_Api.Data
         public DbSet<CallLogs> CallLogs { get; set; } = null!;
         public DbSet<Purpose> Purposes { get; set; } = null!;
         public DbSet<CallLogComment> CallLogComments { get; set; } = null!;
+        public DbSet<PasswordManager> PasswordManagers { get; set; } = null!;
+        public DbSet<VaultConfiguration> VaultConfigurations { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

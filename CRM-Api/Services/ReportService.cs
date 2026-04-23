@@ -288,12 +288,12 @@ namespace CRM_Api.Services
             var customers = await query.ToListAsync();
 
             // Filter by Note Types if specified
-            if (filter.SelectedNoteTypeIds != null && filter.SelectedNoteTypeIds.Any())
-            {
+         //   if (filter.SelectedNoteTypeIds != null && filter.SelectedNoteTypeIds.Any())
+           // {
                 // We keep only customers who have at least one note of the selected types, 
                 // OR we filter the notes themselves later? 
                 // Usually, report shows all customers matching filters, and their notes of selected types.
-            }
+        // }
 
             // Sorting
             if (filter.OrderBy == "Name")
