@@ -12,6 +12,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using CRM_Api.Services.Interfaces;
 
 namespace CRM_Api.Services
 {
@@ -20,12 +21,52 @@ namespace CRM_Api.Services
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _configuration;
+        private readonly IEmailService _emailService;
 
-        public AuthService(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration configuration)
+        public AuthService(
+            UserManager<User> userManager, 
+            SignInManager<User> signInManager, 
+            IConfiguration configuration,
+            IEmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
+            _emailService = emailService;
+        }
+
+        public async Task<bool> ForgotPasswordAsync(ForgotPasswordDto dto)
+        {
+            var user = await _userManager.FindByEmailAsync(dto.Email);
+            if (user == null) return true; // Don't reveal if user exists
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            
+            // Encode token for URL safety
+            var encodedToken = System.Web.HttpUtility.UrlEncode(token);
+            var resetLink = $"{_configuration["DashboardUrl"]?.Replace("/admin/jobs", "")}/reset-password?token={encodedToken}&email={user.Email}";
+
+            var body = $@"
+                <div style='font-family: sans-serif; padding: 20px; color: #333;'>
+                    <h2>Reset Your Password</h2>
+                    <p>Hello {user.FirstName},</p>
+                    <p>We received a request to reset your password for the SSP CRM. Click the button below to set a new password:</p>
+                    <a href='{resetLink}' style='display: inline-block; padding: 10px 20px; background-color: #4F46E5; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0;'>Reset Password</a>
+                    <p>If you didn't request this, you can safely ignore this email.</p>
+                    <p>This link will expire in 2 hours.</p>
+                </div>";
+
+            await _emailService.SendEmailAsync(user.Email!, "Reset Your Password - SSP CRM", body, "Password Reset");
+            return true;
+        }
+
+        public async Task<bool> ResetPasswordAsync(ResetPasswordDto dto)
+        {
+            var user = await _userManager.FindByEmailAsync(dto.Email);
+            if (user == null) return false;
+
+            var result = await _userManager.ResetPasswordAsync(user, dto.Token, dto.NewPassword);
+            return result.Succeeded;
         }
 
         public async Task<RegistrationResponseDto> RegisterAsync(RegisterDto registerDto)

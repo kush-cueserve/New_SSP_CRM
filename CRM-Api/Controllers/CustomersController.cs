@@ -162,5 +162,12 @@ namespace CRM_Api.Controllers
             var result = await _customerService.DeleteCustomerServiceAsync(id);
             return Ok(result);
         }
+
+        [HttpGet("upcoming-birthdays")]
+        public async Task<ActionResult<IEnumerable<UpcomingBirthdayDto>>> GetUpcomingBirthdays([FromQuery] bool forceRefresh = false)
+        {
+            var birthdays = await _customerService.GetUpcomingBirthdaysAsync(forceRefresh);
+            return Ok(birthdays);
+        }
     }
 }

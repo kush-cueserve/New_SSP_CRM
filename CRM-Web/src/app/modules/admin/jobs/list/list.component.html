@@ -1,3 +1,14 @@
+<style>
+    /* Make sort arrows permanently visible */
+    .mat-sort-header-arrow {
+        opacity: 0.3 !important;
+        transform: translateY(0) !important;
+    }
+    .mat-sort-header-sorted .mat-sort-header-arrow {
+        opacity: 1 !important;
+        color: #3b82f6 !important; /* Primary blue for active sort */
+    }
+</style>
 <div class="flex flex-col min-w-0 overflow-hidden"
     [ngClass]="{'absolute inset-0': !dashboardMode, 'relative h-full transition-all': dashboardMode}">
 
@@ -150,67 +161,15 @@
                 <div
                     class="flex flex-col sm:flex-row items-center justify-between py-4 px-6 md:px-8 border-b bg-gray-50 dark:bg-transparent flex-shrink-0">
                     <div class="flex flex-wrap items-center gap-4">
-                        <!-- Status Filter -->
-                        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-40" appearance="outline">
-                            <mat-select [(ngModel)]="filter.statusId" (selectionChange)="onFilterChange()"
-                                placeholder="All Status">
-                                <mat-option [value]="undefined">All Status</mat-option>
-                                <mat-option *ngFor="let status of filteredStatusMasters"
-                                    [value]="status.id">{{status.statusName}}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-
-                        <!-- Priority Filter -->
-                        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-32" appearance="outline">
-                            <mat-select [(ngModel)]="filter.priority" (selectionChange)="onFilterChange()"
-                                placeholder="Priority">
-                                <mat-option [value]="undefined">Any Priority</mat-option>
-                                <mat-option [value]="0">Low</mat-option>
-                                <mat-option [value]="1">Medium</mat-option>
-                                <mat-option [value]="2">High</mat-option>
-                                <mat-option [value]="3">Overdue</mat-option>
-                            </mat-select>
-                        </mat-form-field>
 
                         <!-- Deadline Date Range Filter -->
-                        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-56" appearance="outline">
+                        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-52" appearance="outline">
                             <mat-date-range-input [rangePicker]="deadlinePicker" (click)="deadlinePicker.open()">
                                 <input matStartDate [(ngModel)]="filter.deadlineFrom" (dateChange)="onFilterChange()" placeholder="Deadline From">
                                 <input matEndDate [(ngModel)]="filter.deadlineTo" (dateChange)="onFilterChange()" placeholder="Deadline To">
                             </mat-date-range-input>
                             <mat-datepicker-toggle matIconSuffix [for]="deadlinePicker"></mat-datepicker-toggle>
                             <mat-date-range-picker #deadlinePicker></mat-date-range-picker>
-                        </mat-form-field>
-
-                        <!-- Staff Filter -->
-                        <mat-form-field *ngIf="isGlobalAdmin" class="fuse-mat-dense fuse-mat-no-subscript w-40"
-                            appearance="outline">
-                            <mat-select [(ngModel)]="filter.ownerId" (selectionChange)="onFilterChange()"
-                                placeholder="All Staff">
-                                <mat-option [value]="undefined">All Staff</mat-option>
-                                <mat-option *ngFor="let s of staff" [value]="s.id">{{s.firstName}}
-                                    {{s.lastName}}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-
-                        <!-- Assignee / Responsible Filter -->
-                        <mat-form-field *ngIf="isGlobalAdmin" class="fuse-mat-dense fuse-mat-no-subscript w-40"
-                            appearance="outline">
-                            <mat-select [(ngModel)]="filter.responsibleId" (selectionChange)="onFilterChange()"
-                                placeholder="Assignee">
-                                <mat-option [value]="undefined">All Assignees</mat-option>
-                                <mat-option *ngFor="let s of staff" [value]="s.id">{{s.firstName}}
-                                    {{s.lastName}}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-
-                        <!-- Job Type Filter -->
-                        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-40" appearance="outline">
-                            <mat-select [(ngModel)]="filter.jobTypeId" (selectionChange)="onFilterChange()"
-                                placeholder="Job Type">
-                                <mat-option [value]="undefined">Any Type</mat-option>
-                                <mat-option *ngFor="let type of jobTypes" [value]="type.id">{{type.type}}</mat-option>
-                            </mat-select>
                         </mat-form-field>
 
                         <!-- Archive Filter -->
@@ -306,7 +265,8 @@
 
                 <!-- Jobs Table -->
                 <div class="flex flex-col flex-auto overflow-y-auto min-h-0 px-6 md:px-8">
-                    <table mat-table [dataSource]="jobs" class="w-full bg-transparent">
+                    <table mat-table [dataSource]="jobs" matSort (matSortChange)="onSortChange($event)"
+                        class="w-full bg-transparent">
 
                         <!-- Checkbox Column -->
                         <ng-container matColumnDef="select">
@@ -343,10 +303,27 @@
                             </td>
                         </ng-container>
 
-                        <!-- Type Column -->
+                        <!-- Type Column (with inline filter) -->
                         <ng-container matColumnDef="jobType">
                             <th mat-header-cell *matHeaderCellDef class="sticky top-0 z-10 bg-gray-50 dark:bg-gray-800">
-                                Type</th>
+                                <div class="flex items-center gap-1 cursor-pointer" [matMenuTriggerFor]="typeFilterMenu">
+                                    <span>Type</span>
+                                    <mat-icon class="icon-size-4" [ngClass]="filter.jobTypeId !== undefined ? 'text-primary' : 'text-hint'"
+                                        [svgIcon]="'heroicons_mini:funnel'"></mat-icon>
+                                </div>
+                                <mat-menu #typeFilterMenu="matMenu" class="min-w-40 max-h-72">
+                                    <button mat-menu-item (click)="filter.jobTypeId = undefined; onFilterChange()"
+                                        [class.font-bold]="filter.jobTypeId === undefined">
+                                        <span>Any Type</span>
+                                    </button>
+                                    <mat-divider></mat-divider>
+                                    <button mat-menu-item *ngFor="let type of jobTypes"
+                                        (click)="filter.jobTypeId = type.id; onFilterChange()"
+                                        [class.font-bold]="filter.jobTypeId === type.id">
+                                        {{type.type}}
+                                    </button>
+                                </mat-menu>
+                            </th>
                             <td mat-cell *matCellDef="let job">
                                 <span
                                     class="bg-gray-100 text-gray-600 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide">
@@ -364,10 +341,39 @@
                             </td>
                         </ng-container>
 
-                        <!-- Priority Column -->
+                        <!-- Priority Column (with inline filter) -->
                         <ng-container matColumnDef="priority">
                             <th mat-header-cell *matHeaderCellDef class="sticky top-0 z-10 bg-gray-50 dark:bg-gray-800">
-                                Priority</th>
+                                <div class="flex items-center gap-1 cursor-pointer" [matMenuTriggerFor]="priorityFilterMenu">
+                                    <span>Priority</span>
+                                    <mat-icon class="icon-size-4" [ngClass]="filter.priority !== undefined ? 'text-primary' : 'text-hint'"
+                                        [svgIcon]="'heroicons_mini:funnel'"></mat-icon>
+                                </div>
+                                <mat-menu #priorityFilterMenu="matMenu" class="min-w-36">
+                                    <button mat-menu-item (click)="filter.priority = undefined; onFilterChange()"
+                                        [class.font-bold]="filter.priority === undefined">
+                                        <span>Any Priority</span>
+                                    </button>
+                                    <mat-divider></mat-divider>
+                                    <button mat-menu-item (click)="filter.priority = 0; onFilterChange()"
+                                        [class.font-bold]="filter.priority === 0">
+                                        <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-gray-400"></span> Low</span>
+                                    </button>
+                                    <button mat-menu-item (click)="filter.priority = 1; onFilterChange()"
+                                        [class.font-bold]="filter.priority === 1">
+                                        <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-blue-500"></span> Medium</span>
+                                    </button>
+                                    <button mat-menu-item (click)="filter.priority = 2; onFilterChange()"
+                                        [class.font-bold]="filter.priority === 2">
+                                        <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-amber-500"></span> High</span>
+                                    </button>
+                                    <mat-divider></mat-divider>
+                                    <button mat-menu-item (click)="filter.priority = 3; onFilterChange()"
+                                        [class.font-bold]="filter.priority === 3">
+                                        <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-rose-500"></span> Overdue</span>
+                                    </button>
+                                </mat-menu>
+                            </th>
                             <td mat-cell *matCellDef="let job">
                                 <span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wide" [ngClass]="{
                                         'bg-gray-100 text-gray-600': job.priority === 0,
@@ -391,7 +397,8 @@
                         </ng-container>
 
                         <ng-container matColumnDef="assignDate">
-                            <th mat-header-cell *matHeaderCellDef class="sticky top-0 z-10 bg-gray-50 dark:bg-gray-800">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="assignDate"
+                                class="sticky top-0 z-10 bg-gray-50 dark:bg-gray-800">
                                 Assign Date</th>
                             <td mat-cell *matCellDef="let job">
                                 <span class="text-[13px] text-gray-500 cursor-help"
@@ -401,10 +408,30 @@
                             </td>
                         </ng-container>
 
-                        <!-- Status Column -->
+                        <!-- Status Column (with inline filter) -->
                         <ng-container matColumnDef="status">
                             <th mat-header-cell *matHeaderCellDef class="sticky top-0 z-10 bg-gray-50 dark:bg-gray-800">
-                                Status</th>
+                                <div class="flex items-center gap-1 cursor-pointer" [matMenuTriggerFor]="statusFilterMenu">
+                                    <span>Status</span>
+                                    <mat-icon class="icon-size-4" [ngClass]="filter.statusId !== undefined ? 'text-primary' : 'text-hint'"
+                                        [svgIcon]="'heroicons_mini:funnel'"></mat-icon>
+                                </div>
+                                <mat-menu #statusFilterMenu="matMenu" class="min-w-44 max-h-72">
+                                    <button mat-menu-item (click)="filter.statusId = undefined; onFilterChange()"
+                                        [class.font-bold]="filter.statusId === undefined">
+                                        <span>All Status</span>
+                                    </button>
+                                    <mat-divider></mat-divider>
+                                    <button mat-menu-item *ngFor="let status of filteredStatusMasters"
+                                        (click)="filter.statusId = status.id; onFilterChange()"
+                                        [class.font-bold]="filter.statusId === status.id">
+                                        <span class="flex items-center gap-2">
+                                            <span class="w-2 h-2 rounded-full" [style.background-color]="status.color || '#9ca3af'"></span>
+                                            {{status.statusName}}
+                                        </span>
+                                    </button>
+                                </mat-menu>
+                            </th>
                             <td mat-cell *matCellDef="let job">
                                 <div class="flex items-center gap-2">
                                     <div class="w-1.5 h-1.5 rounded-full" 
@@ -419,7 +446,8 @@
 
                         <!-- Deadline Column -->
                         <ng-container matColumnDef="deadline">
-                            <th mat-header-cell *matHeaderCellDef class="sticky top-0 z-10 bg-gray-50 dark:bg-gray-800">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="deadline"
+                                class="sticky top-0 z-10 bg-gray-50 dark:bg-gray-800">
                                 Deadline</th>
                             <td mat-cell *matCellDef="let job">
                                 <span class="font-semibold text-[13px]"
@@ -431,7 +459,8 @@
 
                         <!-- Days Left Column -->
                         <ng-container matColumnDef="daysLeft">
-                            <th mat-header-cell *matHeaderCellDef class="sticky top-0 z-10 bg-gray-50 dark:bg-gray-800">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="daysLeft"
+                                class="sticky top-0 z-10 bg-gray-50 dark:bg-gray-800">
                                 Days Left</th>
                             <td mat-cell *matCellDef="let job">
                                 <span *ngIf="job.daysLeft !== null && job.daysLeft !== undefined"
@@ -485,10 +514,30 @@
                             </td>
                         </ng-container>
 
-                        <!-- Responsible Column -->
+                        <!-- Responsible Column (with inline filter) -->
                         <ng-container matColumnDef="responsible">
                             <th mat-header-cell *matHeaderCellDef class="sticky top-0 z-10 bg-gray-50 dark:bg-gray-800">
-                                Responsible</th>
+                                <div class="flex items-center gap-1 cursor-pointer" [matMenuTriggerFor]="responsibleFilterMenu">
+                                    <span>Responsible</span>
+                                    <mat-icon class="icon-size-4" [ngClass]="filter.responsibleId !== undefined ? 'text-primary' : 'text-hint'"
+                                        [svgIcon]="'heroicons_mini:funnel'"></mat-icon>
+                                </div>
+                                <mat-menu #responsibleFilterMenu="matMenu" class="min-w-44 max-h-72">
+                                    <button mat-menu-item (click)="filter.responsibleId = undefined; onFilterChange()"
+                                        [class.font-bold]="filter.responsibleId === undefined">
+                                        <span>All</span>
+                                    </button>
+                                    <mat-divider></mat-divider>
+                                    <button mat-menu-item *ngFor="let s of staff"
+                                        (click)="filter.responsibleId = s.id; onFilterChange()"
+                                        [class.font-bold]="filter.responsibleId === s.id">
+                                        <span class="flex items-center gap-2">
+                                            <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-[9px] font-bold uppercase">{{s.firstName?.substring(0,1)}}</span>
+                                            {{s.firstName}} {{s.lastName}}
+                                        </span>
+                                    </button>
+                                </mat-menu>
+                            </th>
                             <td mat-cell *matCellDef="let job">
                                 <div class="flex items-center gap-2" *ngIf="job.responsibleName">
                                     <div
@@ -506,10 +555,30 @@
                             </td>
                         </ng-container>
 
-                        <!-- Lead Column (Owner) -->
+                        <!-- Lead Column / Owner (with inline filter) -->
                         <ng-container matColumnDef="owner">
                             <th mat-header-cell *matHeaderCellDef class="sticky top-0 z-10 bg-gray-50 dark:bg-gray-800">
-                                Lead Person</th>
+                                <div class="flex items-center gap-1 cursor-pointer" [matMenuTriggerFor]="ownerFilterMenu">
+                                    <span>Lead Person</span>
+                                    <mat-icon class="icon-size-4" [ngClass]="filter.ownerId !== undefined ? 'text-primary' : 'text-hint'"
+                                        [svgIcon]="'heroicons_mini:funnel'"></mat-icon>
+                                </div>
+                                <mat-menu #ownerFilterMenu="matMenu" class="min-w-44 max-h-72">
+                                    <button mat-menu-item (click)="filter.ownerId = undefined; onFilterChange()"
+                                        [class.font-bold]="filter.ownerId === undefined">
+                                        <span>All</span>
+                                    </button>
+                                    <mat-divider></mat-divider>
+                                    <button mat-menu-item *ngFor="let s of staff"
+                                        (click)="filter.ownerId = s.id; onFilterChange()"
+                                        [class.font-bold]="filter.ownerId === s.id">
+                                        <span class="flex items-center gap-2">
+                                            <span class="w-5 h-5 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-[9px] font-bold uppercase">{{s.firstName?.substring(0,1)}}</span>
+                                            {{s.firstName}} {{s.lastName}}
+                                        </span>
+                                    </button>
+                                </mat-menu>
+                            </th>
                             <td mat-cell *matCellDef="let job">
                                 <div class="flex items-center gap-2" *ngIf="job.staffName">
                                     <div

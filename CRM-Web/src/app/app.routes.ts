@@ -78,7 +78,9 @@ export const appRoutes: Route[] = [
             {path: 'dashboard', loadChildren: () => import('app/modules/admin/dashboard/dashboard.routes')},
             {path: 'customers', loadChildren: () => import('app/modules/admin/customers/customers.routes')},
             {path: 'jobs', loadChildren: () => import('app/modules/admin/jobs/jobs.routes')},
+            {path: 'calls', loadChildren: () => import('app/modules/admin/calls/calls.routes')},
             {path: 'forms', loadChildren: () => import('app/modules/admin/forms/forms.routes')},
+            {path: 'reports', loadChildren: () => import('app/modules/admin/reports/reports.routes')},
             {path: 'settings', loadChildren: () => import('app/modules/admin/settings/settings.routes')},
         ]
     }

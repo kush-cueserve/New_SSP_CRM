@@ -53,21 +53,10 @@ namespace CRM_Api.Models.Entities.Utilities
         public string ProcessResultLogFile { get; set; } = string.Empty;
     }
 
-    [Table("ActionConfiguration", Schema = "setting")]
-    public class ActionConfiguration
+    [Table("VaultConfiguration", Schema = "setting")]
+    public class VaultConfiguration : EntityBase
     {
-        public int Id { get; set; }
-        public string UserName { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-        public string FromEmail { get; set; } = string.Empty;
-        public int? SMTPPort { get; set; }
-        public string SMTPHost { get; set; } = string.Empty;
-        public string CCEmail1 { get; set; } = string.Empty;
-        public string CCEmail2 { get; set; } = string.Empty;
-        public bool? IsActive { get; set; }
-        public bool? IsDeleted { get; set; }
-        public DateTime? CreatedDate { get; set; }
-        public DateTime? ModifiedDate { get; set; }
+        public string? MasterPassword { get; set; }
     }
 
     [Table("EmailTemplateMaster", Schema = "dbo")]

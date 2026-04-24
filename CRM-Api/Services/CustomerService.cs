@@ -7,9 +7,9 @@ using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using CRM_Api.Services.Interfaces;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace CRM_Api.Services
 {
@@ -18,15 +18,18 @@ namespace CRM_Api.Services
         private readonly AppDbContext _context;
         private readonly IDynamicFieldService _dynamicFieldService;
         private readonly ICustomerRelationshipService _relationshipService;
+        private readonly IMemoryCache _cache;
 
         public CustomerService(
             AppDbContext context,
             IDynamicFieldService dynamicFieldService,
-            ICustomerRelationshipService relationshipService)
+            ICustomerRelationshipService relationshipService,
+            IMemoryCache cache)
         {
             _context = context;
             _dynamicFieldService = dynamicFieldService;
             _relationshipService = relationshipService;
+            _cache = cache;
         }
 
         public async Task<CustomerPagedResponseDto> GetHistoryListAsync(CustomerListFilter filter)
@@ -36,22 +39,37 @@ namespace CRM_Api.Services
                 .AsQueryable();
 
             // Filtering logic
-            if (!filter.IncludeArchived)
+            // IsDeleted is the real archive flag in the database
+            if (filter.IncludeArchived)
             {
-                query = query.Where(c => c.IsArchived == false || c.IsArchived == null);
+                // Show only archived/deleted records
+                query = query.Where(c => c.IsDeleted == true);
+            }
+            else
+            {
+                // Default: hide archived/deleted records
+                query = query.Where(c => c.IsDeleted == false);
             }
             
-            if (!filter.IncludeExcluded)
+            if (filter.IncludeExcluded)
+            {
+                // Show only excluded records
+                query = query.Where(c => c.IsExcluded == true);
+            }
+            else
             {
                 query = query.Where(c => c.IsExcluded == false || c.IsExcluded == null);
             }
 
-            if (!filter.IncludeInactive)
+            if (filter.IncludeInactive)
+            {
+                // Show only inactive records
+                query = query.Where(c => c.IsActive == false);
+            }
+            else
             {
                 query = query.Where(c => c.IsActive == true || c.IsActive == null);
             }
-            
-            query = query.Where(c => !c.IsDeleted);
 
             if (filter.ContactType.HasValue && filter.ContactType.Value > 0)
             {
@@ -995,6 +1013,71 @@ namespace CRM_Api.Services
             service.IsDeleted = true;
             await _context.SaveChangesAsync();
             return true;
+        }
+        public async Task<IEnumerable<UpcomingBirthdayDto>> GetUpcomingBirthdaysAsync(bool forceRefresh = false)
+        {
+            const string CacheKey = "UpcomingBirthdays";
+
+            if (!forceRefresh && _cache.TryGetValue(CacheKey, out IEnumerable<UpcomingBirthdayDto> cachedBirthdays))
+            {
+                Console.WriteLine("BirthdayService: Returning data from Backend Cache.");
+                return cachedBirthdays;
+            }
+
+            if (forceRefresh)
+                Console.WriteLine("BirthdayService: Force Refresh requested. Fetching data from Database.");
+            else
+                Console.WriteLine("BirthdayService: Fetching data from Database (Cache expired or empty).");
+
+            var today = DateTime.Today;
+            var endDate = today.AddDays(7);
+
+            var rawData = await _context.Customers
+                .Where(c => !c.IsDeleted)
+                .Select(c => new
+                {
+                    c.Id,
+                    c.Name,
+                    Email = c.ContactInfo != null ? c.ContactInfo.Email : null,
+                    DOB = c.IndividualInfo != null ? c.IndividualInfo.DateOfBirth : 
+                          (c.SolePropriterInfo != null ? c.SolePropriterInfo.DateOfBirth : null)
+                })
+                .Where(x => x.DOB != null)
+                .ToListAsync();
+
+            var birthdays = rawData
+                .Select(x =>
+                {
+                    var dob = x.DOB.Value;
+                    // Calculate next occurrence of this birthday
+                    var nextBday = new DateTime(today.Year, dob.Month, dob.Day);
+                    if (nextBday < today)
+                    {
+                        nextBday = nextBday.AddYears(1);
+                    }
+
+                    return new UpcomingBirthdayDto
+                    {
+                        CustomerId = x.Id,
+                        Name = x.Name,
+                        Email = x.Email ?? "",
+                        DateOfBirth = dob,
+                        DaysUntil = (nextBday - today).Days,
+                        Day = dob.Day.ToString(),
+                        Month = dob.ToString("MMM")
+                    };
+                })
+                .Where(b => b.DaysUntil >= 0 && b.DaysUntil <= 6)
+                .OrderBy(b => b.DaysUntil)
+                .ToList();
+
+            // Cache for 24 hours or until end of day
+            var cacheOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(DateTime.Today.AddDays(1)); // Expires at midnight
+
+            _cache.Set(CacheKey, birthdays, cacheOptions);
+
+            return birthdays;
         }
     }
 }

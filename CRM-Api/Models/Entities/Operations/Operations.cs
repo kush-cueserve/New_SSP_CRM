@@ -13,26 +13,33 @@ namespace CRM_Api.Models.Entities.Operations
         public int? Receiver { get; set; }
         public int? ForWhom { get; set; }
         [StringLength(50)]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         [StringLength(50)]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
         [StringLength(20)]
-        public string MobileNo { get; set; }
+        public string MobileNo { get; set; } = string.Empty;
         [StringLength(50)]
-        public string CompanyName { get; set; }
+        public string CompanyName { get; set; } = string.Empty;
         public int? Purpose { get; set; }
         public int? Status { get; set; }
         public string Remark { get; set; } = string.Empty;
         public bool? IsClosed { get; set; }
         public bool? IsChecked { get; set; }
         public string OtherPurpose { get; set; } = string.Empty;
-        public string NatureOfBusiness { get; set; } = string.Empty;
+        
+        // Storing checkbox selections as comma-separated strings
+        public string NatureOfBusiness { get; set; } = string.Empty; 
         public string OtherNatureOfBusiness { get; set; } = string.Empty;
         public string HearAboutUs { get; set; } = string.Empty;
         public string OtherHearAboutUs { get; set; } = string.Empty;
 
         [ForeignKey("Purpose")]
-        public virtual Purpose PurposeNavigation { get; set; } = null!;
+        public virtual Purpose? PurposeNavigation { get; set; }
+
+        [ForeignKey("Status")]
+        public virtual Customer.JobStatusMaster? StatusNavigation { get; set; }
+
+        public virtual ICollection<CallLogComment> Comments { get; set; } = new List<CallLogComment>();
     }
 
     [Table("Purpose")]
@@ -42,6 +49,16 @@ namespace CRM_Api.Models.Entities.Operations
         public string PurposeName { get; set; } = string.Empty;
         public bool IsActive { get; set; }
         public virtual ICollection<CallLogs> CallLogsPurposeNavigation { get; set; } = new List<CallLogs>();
+    }
+
+    [Table("CallLogComments")]
+    public class CallLogComment : EntityBase, IApiResultModel
+    {
+        public int CallLogId { get; set; }
+        public string Comment { get; set; } = string.Empty;
+
+        [ForeignKey("CallLogId")]
+        public virtual CallLogs CallLog { get; set; } = null!;
     }
 
     [Table("Job", Schema = "task")]

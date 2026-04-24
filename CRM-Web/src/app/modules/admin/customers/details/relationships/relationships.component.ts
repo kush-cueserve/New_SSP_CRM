@@ -64,6 +64,16 @@ export class RelationshipsComponent implements OnInit {
         this.loadLookups();
         this.setupCustomerSearch();
         
+        // Date Validation Logic
+        this.relationshipForm.get('startDate').valueChanges
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(start => {
+                const end = this.relationshipForm.get('endDate').value;
+                if (start && end && start > end) {
+                    this.relationshipForm.get('endDate').setValue(null);
+                }
+            });
+
         if (this.customerId) {
             this.loadRelationships();
         } else {
@@ -200,5 +210,24 @@ export class RelationshipsComponent implements OnInit {
     formatDate(date: any): string {
         if (!date) return '-';
         return new Date(date).toLocaleDateString();
+    }
+
+    isExpired(endDate: any): boolean {
+        if (!endDate) return false;
+        
+        try {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const expiryDate = new Date(endDate);
+            // Handle invalid dates
+            if (isNaN(expiryDate.getTime())) return false;
+            
+            expiryDate.setHours(0, 0, 0, 0);
+            
+            return expiryDate.getTime() < today.getTime();
+        } catch (e) {
+            return false;
+        }
     }
 }

@@ -2,6 +2,7 @@ using CRM_Api.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace CRM_Api.Controllers
 {
@@ -30,7 +31,8 @@ namespace CRM_Api.Controllers
             var jobStatusMasters = await _context.JobStatusMasters.ToListAsync();
             var jobTypeStatusMappings = await _context.JobTypeStatusMappings.ToListAsync();
             var customers = await _context.Customers.Select(c => new { id = c.Id, name = c.Name }).ToListAsync();
-
+            var fsNoteMasters = await _context.FSNoteMasters.Where(m => m.IsActive).OrderBy(m => m.SortOrder).ToListAsync();
+            
             return Ok(new
             {
                 ContactTypes = contactTypes,
@@ -43,7 +45,8 @@ namespace CRM_Api.Controllers
                 JobTypes = jobTypes,
                 JobStatusMasters = jobStatusMasters,
                 JobTypeStatusMappings = jobTypeStatusMappings,
-                Customers = customers
+                Customers = customers,
+                FSNoteMasters = fsNoteMasters
             });
         }
     }

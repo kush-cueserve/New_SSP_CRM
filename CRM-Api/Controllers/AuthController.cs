@@ -58,6 +58,21 @@ namespace CRM_Api.Controllers
             return Ok(response);
         }
 
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
+        {
+            await _authService.ForgotPasswordAsync(dto);
+            return Ok(new { message = "If your email is registered, you will receive a reset link shortly." });
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
+        {
+            var result = await _authService.ResetPasswordAsync(dto);
+            if (!result) return BadRequest(new { message = "Invalid token or request." });
+            return Ok(new { message = "Password has been reset successfully." });
+        }
+
         [HttpGet("ping")]
         public IActionResult Ping()
         {

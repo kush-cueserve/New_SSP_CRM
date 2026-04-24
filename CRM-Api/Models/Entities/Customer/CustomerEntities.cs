@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using CRM_Api.Models.Entities.DynamicFields;
 using CRM_Api.Models.Base;
 
 namespace CRM_Api.Models.Entities.Customer
@@ -73,6 +74,8 @@ namespace CRM_Api.Models.Entities.Customer
         public virtual SolePropriterInfo? SolePropriterInfo { get; set; }
         public virtual ContactInfo? ContactInfo { get; set; }
         public virtual ICollection<CustomerServiceDetail> Services { get; set; } = new List<CustomerServiceDetail>();
+        public virtual ICollection<DynamicFieldValue> DynamicFieldValues { get; set; } = new List<DynamicFieldValue>();
+        public virtual ICollection<CustomerFSNote> FSNotes { get; set; } = new List<CustomerFSNote>();
     }
 
     [Table("Address", Schema = "cust")]

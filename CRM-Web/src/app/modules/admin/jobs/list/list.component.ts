@@ -10,10 +10,11 @@ import { MatNativeDateModule } from '@angular/material/core';
 
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatMenuModule } from '@angular/material/menu';
@@ -42,7 +43,6 @@ import { Input, OnChanges, SimpleChanges } from '@angular/core';
         MatFormFieldModule,
         MatIconModule,
         MatInputModule,
-
         MatSelectModule,
         MatPaginatorModule,
         MatTableModule,
@@ -52,7 +52,9 @@ import { Input, OnChanges, SimpleChanges } from '@angular/core';
         MatDividerModule,
         MatProgressBarModule,
         MatDatepickerModule,
-        MatNativeDateModule
+        MatNativeDateModule,
+        MatDialogModule,
+        MatSortModule
     ]
 })
 export class JobsListComponent implements OnInit, OnChanges, OnDestroy {
@@ -83,7 +85,9 @@ export class JobsListComponent implements OnInit, OnChanges, OnDestroy {
         jobTypeId: undefined,
         responsibleId: undefined,
         isInternal: false,
-        isActive: true
+        isActive: true,
+        orderBy: 'deadline',
+        orderDirection: 'desc'
     };
 
     searchInputControl: FormControl = new FormControl();
@@ -325,6 +329,16 @@ export class JobsListComponent implements OnInit, OnChanges, OnDestroy {
     onFilterChange(): void {
         this.filter.pageNumber = 1;
         this.updateFilteredStatuses();
+        this.loadJobs();
+    }
+
+    /**
+     * Handle sort change
+     */
+    onSortChange(sort: any): void {
+        this.filter.orderBy = sort.active;
+        this.filter.orderDirection = sort.direction || 'desc';
+        this.filter.pageNumber = 1;
         this.loadJobs();
     }
 

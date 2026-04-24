@@ -12,7 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { FuseValidators } from '@fuse/validators';
@@ -45,13 +45,17 @@ export class AuthResetPasswordComponent implements OnInit {
     };
     resetPasswordForm: UntypedFormGroup;
     showAlert: boolean = false;
+    private _token: string = '';
+    private _email: string = '';
 
     /**
      * Constructor
      */
     constructor(
         private _authService: AuthService,
-        private _formBuilder: UntypedFormBuilder
+        private _formBuilder: UntypedFormBuilder,
+        private _activatedRoute: ActivatedRoute,
+        private _router: Router
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
@@ -62,6 +66,16 @@ export class AuthResetPasswordComponent implements OnInit {
      * On init
      */
     ngOnInit(): void {
+        // Get the token and email from the query parameters
+        this._token = this._activatedRoute.snapshot.queryParamMap.get('token') ?? '';
+        this._email = this._activatedRoute.snapshot.queryParamMap.get('email') ?? '';
+
+        // If token or email is missing, redirect to sign-in
+        if (!this._token || !this._email) {
+            this._router.navigate(['/sign-in']);
+            return;
+        }
+
         // Create the form
         this.resetPasswordForm = this._formBuilder.group(
             {
@@ -98,7 +112,11 @@ export class AuthResetPasswordComponent implements OnInit {
 
         // Send the request to the server
         this._authService
-            .resetPassword(this.resetPasswordForm.get('password').value)
+            .resetPassword({
+                email: this._email,
+                token: this._token,
+                newPassword: this.resetPasswordForm.get('password').value
+            })
             .pipe(
                 finalize(() => {
                     // Re-enable the form
@@ -116,14 +134,14 @@ export class AuthResetPasswordComponent implements OnInit {
                     // Set the alert
                     this.alert = {
                         type: 'success',
-                        message: 'Your password has been reset.',
+                        message: 'Your password has been reset. You can now login with your new password.',
                     };
                 },
                 (response) => {
                     // Set the alert
                     this.alert = {
                         type: 'error',
-                        message: 'Something went wrong, please try again.',
+                        message: 'Invalid or expired token. Please request a new password reset link.',
                     };
                 }
             );

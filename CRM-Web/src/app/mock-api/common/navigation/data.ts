@@ -24,11 +24,40 @@ export const defaultNavigation: FuseNavigationItem[] = [
         link : '/jobs'
     },
     {
+        id   : 'calls',
+        title: 'Call Tracker',
+        type : 'basic',
+        icon : 'heroicons_outline:phone',
+        link : '/calls'
+    },
+    {
         id   : 'forms',
         title: 'Forms',
         type : 'basic',
         icon : 'heroicons_outline:document-duplicate',
         link : '/forms'
+    },
+    {
+        id      : 'reports',
+        title   : 'Reports',
+        type    : 'collapsable',
+        icon    : 'heroicons_outline:document-chart-bar',
+        children: [
+            {
+                id   : 'reports.client-details',
+                title: 'Client Details',
+                type : 'basic',
+                icon : 'heroicons_outline:identification',
+                link : '/reports/client-details'
+            },
+            {
+                id   : 'reports.notes-for-fs',
+                title: 'Notes for FS',
+                type : 'basic',
+                icon : 'heroicons_outline:document-text',
+                link : '/reports/notes-for-fs'
+            }
+        ]
     },
     {
         id   : 'settings',
@@ -49,6 +78,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type : 'basic',
                 icon : 'heroicons_outline:adjustments-horizontal',
                 link : '/settings/dynamic-fields'
+            },
+            {
+                id   : 'settings.passwords',
+                title: 'Password Manager',
+                type : 'basic',
+                icon : 'heroicons_outline:key',
+                link : '/settings/passwords'
             }
         ]
     }
