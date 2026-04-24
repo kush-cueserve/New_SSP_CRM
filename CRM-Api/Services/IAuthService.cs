@@ -9,5 +9,7 @@ namespace CRM_Api.Services
         Task<AuthResponseDto?> LoginAsync(LoginDto loginDto);
         Task<RegistrationResponseDto> RegisterAsync(RegisterDto registerDto);
         Task<UserProfileDto?> GetUserInfoAsync(int userId);
+        Task<bool> ForgotPasswordAsync(ForgotPasswordDto dto);
+        Task<bool> ResetPasswordAsync(ResetPasswordDto dto);
     }
 }

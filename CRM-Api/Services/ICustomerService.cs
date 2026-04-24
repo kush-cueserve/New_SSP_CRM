@@ -14,6 +14,7 @@ namespace CRM_Api.Services
         Task<bool> DeleteCustomerAsync(int id);
         Task<int> GetIncrementCodeByTypeAsync(int contactType);
         Task<bool> CheckDuplicateCodeAsync(string code);
+        Task<IEnumerable<UpcomingBirthdayDto>> GetUpcomingBirthdaysAsync(bool forceRefresh = false);
         Task<IEnumerable<FileUploadInfoDto>> GetUploadHistoryAsync();
         Task<FileUploadInfoDto> ProcessFileAsync(int fileId);
         Task<bool> VerifyCustomerAsync(int id, int userId);

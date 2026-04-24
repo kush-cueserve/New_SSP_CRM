@@ -105,7 +105,7 @@ export class AuthForgotPasswordComponent implements OnInit {
                     this.alert = {
                         type: 'success',
                         message:
-                            "Password reset sent! You'll receive an email if you are registered on our system.",
+                            "Email sent to inbox, check it.",
                     };
                 },
                 (response) => {
@@ -113,7 +113,7 @@ export class AuthForgotPasswordComponent implements OnInit {
                     this.alert = {
                         type: 'error',
                         message:
-                            'Email does not found! Are you sure you are already a member?',
+                            'Something went wrong. Please try again later.',
                     };
                 }
             );

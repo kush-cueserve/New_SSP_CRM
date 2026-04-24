@@ -19,6 +19,7 @@ import { ShortcutsComponent } from 'app/layout/common/shortcuts/shortcuts.compon
 import { UserComponent } from 'app/layout/common/user/user.component';
 import { TodoHeaderComponent } from 'app/layout/common/todo/todo.component';
 import { StickyNotesHeaderComponent } from 'app/layout/common/notes/notes-header.component';
+import { BirthdayHeaderComponent } from 'app/layout/common/birthday/birthday-header.component';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -36,6 +37,7 @@ import { Subject, takeUntil } from 'rxjs';
         ShortcutsComponent,
         TodoHeaderComponent,
         StickyNotesHeaderComponent,
+        BirthdayHeaderComponent,
         RouterOutlet,
     ],
 })

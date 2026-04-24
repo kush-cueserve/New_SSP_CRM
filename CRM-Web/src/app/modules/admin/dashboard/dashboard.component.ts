@@ -12,11 +12,11 @@ import { Subject, delay, takeUntil } from 'rxjs';
 import { JobService } from '../jobs/job.service';
 import { JobStatistics } from '../jobs/job.types';
 import { UserService } from 'app/core/user/user.service';
-import { FuseConfirmationService } from '@fuse/services/confirmation';
+import { BirthdayService, UpcomingBirthday } from '../reports/birthday.service';
+import { BirthdayDialogComponent } from '../reports/birthday-dialog/birthday-dialog.component';
 import { JobsListComponent } from '../jobs/list/list.component';
 import { JobFilter } from '../jobs/job.types';
 import { TodoService } from './todo.service';
-import { TodoManagerComponent } from './todo-manager/todo-manager.component';
 
 @Component({
     selector: 'dashboard',
@@ -44,6 +44,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     isAdmin: boolean = false;
     isGlobalView: boolean = false;
     personalTodoCount: number = 0;
+    birthdayCount: number = 0;
+    upcomingBirthdays: UpcomingBirthday[] = [];
     
     // Filter to pass down to JobsList
     jobsFilter: Partial<JobFilter> = {};
@@ -56,6 +58,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private _jobService = inject(JobService);
     private _todoService = inject(TodoService);
     private _userService = inject(UserService);
+    private _birthdayService = inject(BirthdayService);
+    private _dialog = inject(MatDialog);
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor() {}
@@ -71,8 +75,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
                     this.updateJobsFilter();
                     this.loadStats();
                     this.loadPersonalTodoCount();
+                    this.loadBirthdays();
                 }
             });
+    }
+
+    loadBirthdays(): void {
+        this._birthdayService.getUpcomingBirthdays().subscribe((birthdays) => {
+            this.upcomingBirthdays = birthdays;
+            this.birthdayCount = birthdays.length;
+            this._changeDetectorRef.markForCheck();
+        });
+    }
+
+    openBirthdayDialog(): void {
+        this._dialog.open(BirthdayDialogComponent, {
+            width: '600px',
+            maxWidth: '95vw'
+        });
     }
 
     loadPersonalTodoCount(): void {

@@ -15,7 +15,6 @@ import { Observable, map, startWith, finalize } from 'rxjs';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterLink } from '@angular/router';
-import { FuseLoadingBarComponent } from '@fuse/components/loading-bar';
 import { ReportsService, FSNotesReportFilter } from '../reports.service';
 import { HttpClient } from '@angular/common/http';
 import { API_BASE_URL } from 'app/app.config';
@@ -42,7 +41,6 @@ import { MatChipsModule } from '@angular/material/chips';
         MatAutocompleteModule,
         MatChipsModule,
         RouterLink,
-        FuseLoadingBarComponent,
         MatProgressSpinnerModule
     ]
 })
